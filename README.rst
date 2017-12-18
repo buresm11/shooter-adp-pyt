@@ -18,7 +18,7 @@ Hra bude obsahovat následující prvky:
 * Alespoň dva druhy nepřátel (statičtí, akční, AI)
 * Možnost vystřelit více střel najednou
 * Krok zpět, který vrátí hru do předcházejícího stavu
-* Ukládání hry
+* Ukládání/načítání hry ze souboru
 * Dvě strategie střel (balistická křivka, přímá)
 * Bude obsahovat návrhové vzory:
 
