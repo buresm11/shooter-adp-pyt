@@ -7,12 +7,13 @@ import pyglet
 
 def main():
 	
-	size = Size(800,600)
+	playground_size = Size(800,600)
 
-	model = Model(size)
+	model = Model(playground_size)
 
-	window = pyglet.window.Window(size.x, size.y)
+	window = pyglet.window.Window(playground_size.x, playground_size.y)
 	view = View(window, model)
+	model.add_observer(view)
 
 	controller = Controller(pyglet.app, pyglet.clock, view, model)
 	controller.run()

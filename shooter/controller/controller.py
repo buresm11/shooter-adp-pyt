@@ -13,6 +13,6 @@ class Controller():
 		self.app.run()
 
 	def tick(self, t):
-		print("tick")
+		self.model.tick()
 
 
