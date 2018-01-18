@@ -1,7 +1,7 @@
 import pyglet
 from pyglet.window import key
 
-from ..model.model import Vector
+from ..model.objects import Vector
 
 from abc import ABC, abstractmethod
 

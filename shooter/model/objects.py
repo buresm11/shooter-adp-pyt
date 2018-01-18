@@ -3,6 +3,8 @@ import os
 import math
 import random
 
+from enum import Enum
+
 class Drawable(pyglet.sprite.Sprite):
 
 	def __init__(self, image, playground_size):
@@ -102,6 +104,43 @@ class SmartEnemy(Enemy):
 	def __init__(self, image, playground_size):
 		super().__init__(image, playground_size)
 
+		self.set_random_direction()
+
+	def move(self):
+
+		accident = False
+
+		if self.direction == Direction.EAST:
+			accident = super().move(Vector(3,0))
+		if self.direction == Direction.NORTH:
+			accident = super().move(Vector(0,3))
+		if self.direction == Direction.SOUTH:
+			accident = super().move(Vector(0,-3))
+		if self.direction == Direction.WEST:
+			accident = super().move(Vector(-3,0))  
+
+		if accident == True:
+			self.set_random_direction()
+		else:
+			value = random.randint(0, 500)
+
+			if value < 20:
+				self.set_random_direction()
+		
+
+	def set_random_direction(self):
+		value = random.randint(0, 500)
+
+		if value < 125:
+			self.direction = Direction.EAST
+		elif value < 250:
+			self.direction = Direction.NORTH
+		elif value < 375:
+			self.direction = Direction.SOUTH
+		else:
+			self.direction = Direction.WEST
+
+
 class Missile(Drawable):
 
 	def __init__(self):
@@ -111,3 +150,17 @@ class Blast(Drawable):
 
 	def __init__(self):
 		pass
+
+# possible move to another file | downwards
+
+class Direction(Enum):
+		EAST = 1
+		WEST = 2
+		NORTH = 3
+		SOUTH = 4
+
+class Vector():
+
+	def __init__(self, x, y):
+		self.x = x;
+		self.y = y;

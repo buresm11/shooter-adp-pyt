@@ -4,6 +4,7 @@ import pyglet
 
 from .objects import Cannon
 from .objects import SimpleEnemy
+from .objects import SmartEnemy
 import os
 
 class Model(Observable):
@@ -21,6 +22,9 @@ class Model(Observable):
 		self.make_enemies()
 
 	def tick(self):
+
+		for enemy in self.enemies:
+			enemy.move()
 
 		if self.cannon.ignition_phase == True:
 			self.cannon.add_fire_power()
@@ -45,7 +49,7 @@ class Model(Observable):
 
 	def make_enemies(self):
 		for i in range(15):
-			self.enemies.append(SimpleEnemy(self.images.enemy_image(), self.size))
+			self.enemies.append(SmartEnemy(self.images.enemy_image(), self.size))
 
 	def order_to_fire(self):
 		self.cannon.ignition_fire()
