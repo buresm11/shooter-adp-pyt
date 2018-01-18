@@ -57,6 +57,8 @@ class Cannon(Drawable):
 		self.ignition_phase = False
 		self.x = self.width / 2
 		self.y = self.playground_size.y / 2 - self.height / 2
+
+		self.prepared_missiles = []
  
 	def rotate_cannon(self, rotation_offset):
 		self.angle = math.atan2(math.sin(self.angle + rotation_offset),math.cos(self.angle + rotation_offset))

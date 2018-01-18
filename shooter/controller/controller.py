@@ -42,7 +42,15 @@ class Controller():
 			self.keys_pressed['right'] = True
 			self.commands.append(RotateCannonCommand(self.model, 0.1))
 		elif symbol == key.A:
-			pass 		
+			self.commands.append(ChangeGravityCommand(self.model,-1))
+		elif symbol == key.S:
+			self.commands.append(ChangeGravityCommand(self.model,1))
+		elif symbol == key.U:
+			self.commands.append(GoBackCommand(self.model))
+		elif symbol == key.Q:
+			self.commands.append(SwitchModeCommand(self.model))
+		elif symbol == key.W:
+			self.commands.append(SwitchCannonModeCommand(self.model))
 
 	def key_released(self, symbol, modifiers):
 		if symbol == key.SPACE:
@@ -121,5 +129,40 @@ class RotateCannonCommand():
 
 	def execute(self):
 		self.model.rotate_cannon(self.rotation_offset)
+
+class ChangeGravityCommand():
+
+	def __init__(self, model, gravity_offset):
+		self.model = model;
+		self.gravity_offset = gravity_offset
+
+	def execute(self):
+		self.model.change_gravity(self.gravity_offset)
+
+class GoBackCommand():
+
+	def __init__(self, model):
+		self.model = model;
+
+	def execute(self):
+		self.model.go_back()
+
+class SwitchModeCommand():
+
+	def __init__(self, model):
+		self.model = model;
+
+	def execute(self):
+		self.model.switch_mode()
+
+class SwitchCannonModeCommand():
+
+	def __init__(self, model):
+		self.model = model;
+
+	def execute(self):
+		self.model.switch_cannon_mode()
+
+
 
 

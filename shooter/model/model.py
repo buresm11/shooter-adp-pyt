@@ -14,8 +14,9 @@ class Model(Observable):
 		self.images = Images()
 		self.cannon = Cannon(self.images.cannon_image(),size)
 		self.enemies = []
-		self.prepared_missiles = []
-		self.fired_missiles = []
+		self.missiles = []
+		self.score = 0
+		self.gravity = 0
 
 		self.make_enemies()
 
@@ -49,13 +50,26 @@ class Model(Observable):
 	def order_to_fire(self):
 		self.cannon.ignition_fire()
 
+	def change_gravity(self, gravity_offset):
+		if self.gravity + gravity_offset > 0 and self.gravity + gravity_offset < 20:
+			self.gravity += gravity_offset
+
+	def go_back(self):
+		pass
+
+	def switch_mode(self):
+		pass
+
+	def switch_cannon_mode(self):
+		pass
+
 	def get_hud(self):
 		hud = []
 
-		hud.append("Mode:" )
-		hud.append("Gravity:")
-		hud.append("Firepower:" + str(self.cannon.fire_power))
-		hud.append("Score:")
+		hud.append("Mode: " )
+		hud.append("Gravity: " + str(self.gravity))
+		hud.append("Firepower: " + str(self.cannon.fire_power))
+		hud.append("Score: " + str(self.score))
 
 		return hud
 
