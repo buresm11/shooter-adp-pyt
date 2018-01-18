@@ -31,8 +31,10 @@ class Controller():
 			self.commands.append(MoveCannonCommand(self.model, Vector(0,-5)))
 		elif symbol == key.LEFT:
 			self.keys_pressed['left'] = True
+			self.commands.append(RotateCannonCommand(self.model, -0.1))
 		elif symbol == key.RIGHT:
 			self.keys_pressed['right'] = True
+			self.commands.append(RotateCannonCommand(self.model, 0.1))
 		elif symbol == key.A:
 			pass 		
 
@@ -57,10 +59,18 @@ class Controller():
 		if 'up' in self.keys_pressed:
 			if self.keys_pressed['up'] == True:
 				self.commands.append(MoveCannonCommand(self.model, Vector(0,5)))
-				
+
 		if 'down' in self.keys_pressed:
 			if self.keys_pressed['down'] == True:
 				self.commands.append(MoveCannonCommand(self.model, Vector(0,-5)))
+
+		if 'left' in self.keys_pressed:
+			if self.keys_pressed['left'] == True:
+				self.commands.append(RotateCannonCommand(self.model, -0.1))
+
+		if 'right' in self.keys_pressed:
+			if self.keys_pressed['right'] == True:
+				self.commands.append(RotateCannonCommand(self.model, 0.1))
 
 		for command in self.commands:
 			command.execute()
@@ -92,5 +102,14 @@ class MoveCannonCommand():
 
 	def execute(self):
 		self.model.move_cannon(self.offset)
+
+class RotateCannonCommand():
+
+	def __init__(self, model, rotation_offset):
+		self.model = model;
+		self.rotation_offset = rotation_offset
+
+	def execute(self):
+		self.model.rotate_cannon(self.rotation_offset)
 
 

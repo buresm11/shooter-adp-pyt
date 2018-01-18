@@ -28,6 +28,9 @@ class Model(Observable):
 	def move_cannon(self, offset):
 		self.cannon.move(offset)
 
+	def rotate_cannon(self, rotation_offset):
+		self.cannon.rotate_cannon(rotation_offset)
+
 
 class Images():
 

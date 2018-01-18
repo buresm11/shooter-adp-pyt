@@ -1,10 +1,15 @@
 import pyglet
 import os
+import math
 
 class Drawable(pyglet.sprite.Sprite):
 
 	def __init__(self, image, playground_size):
 		super().__init__(image)
+
+		self.image.anchor_x = self.width / 2
+		self.image.anchor_y = self.height / 2
+
 		self.playground_size = playground_size
 
 	def get_rect(self):
@@ -18,20 +23,20 @@ class Drawable(pyglet.sprite.Sprite):
 
 		accident = False
 
-		if self.x + offset.x < 0:
-			self.x = 0
+		if self.x + offset.x - self.width / 2  < 0:
+			self.x = self.width / 2
 			accident = True
-		elif self.x + offset.x + self.width >= self.playground_size.x:
-			self.x = self.playground_size.x - self.width
+		elif self.x + offset.x + self.width / 2 > self.playground_size.x:
+			self.x = self.playground_size.x - self.width / 2
 			accident = True
 		else:
 			self.x += offset.x
 
-		if self.y + offset.y < 0:
-			self.y = 0
+		if self.y + offset.y - self.height / 2 < 0:
+			self.y = self.height / 2
 			accident = True
-		elif self.y + offset.y + self.height >= self.playground_size.y:
-			self.y = self.playground_size.y - self.height
+		elif self.y + offset.y + self.height / 2 > self.playground_size.y:
+			self.y = self.playground_size.y - self.height / 2
 			accident = True
 		else:
 			self.y += offset.y
@@ -44,8 +49,13 @@ class Cannon(Drawable):
 	def __init__(self, image, playground_size):
 		super().__init__(image, playground_size)
 
-		print(self.x)
-		print(self.y)
+		self.angle = 0
+		self.x = self.width / 2
+		self.y = self.playground_size.y / 2 - self.height / 2
+ 
+	def rotate_cannon(self, rotation_offset):
+		self.angle = math.atan2(math.sin(self.angle + rotation_offset),math.cos(self.angle + rotation_offset))
+		self.rotation = math.degrees(self.angle)
 
 class Enemy(Drawable):
 
