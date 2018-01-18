@@ -13,5 +13,6 @@ setup(
 		'Intended Audience :: Gamers',
     	'License :: Public Domain',
     	'Programming Language :: Python'],
+    install_requires=['pyglet'],
     zip_safe=False
 )

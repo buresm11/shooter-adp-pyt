@@ -1,4 +1,3 @@
-
 from abc import ABC, abstractmethod
 
 class Observable(ABC):
@@ -7,7 +6,6 @@ class Observable(ABC):
 		self.obs = []
 
 	def add_observer(self, observer):
-		print("cc")
 		if not isinstance(observer, Observer):
 			raise TypeError("must be of type Observer")
 		elif observer not in self.obs:
@@ -21,10 +19,8 @@ class Observable(ABC):
 
 	def notify_observers(self):
 		for observer in self.obs:
-			observer.update()
+			observer.update(self)
 
-class Observer(ABC):
-
-	@abstractmethod
+class Observer():
 	def update(self):
 		pass

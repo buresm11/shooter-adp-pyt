@@ -11,14 +11,8 @@ def main():
 
 	model = Model(playground_size)
 
-	window = pyglet.window.Window(playground_size.x, playground_size.y)
-	view = View(window, model)
+	view = View(playground_size)
 	model.add_observer(view)
 
-	controller = Controller(pyglet.app, pyglet.clock, view, model)
+	controller = Controller(view, model)
 	controller.run()
-
-
-
-
-

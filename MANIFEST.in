@@ -1,1 +1,6 @@
 include LICENSE
+include shooter/res/cannon.png
+include shooter/res/collision.png
+include shooter/res/enemy1.png
+include shooter/res/enemy2.png
+include shooter/res/missile.png

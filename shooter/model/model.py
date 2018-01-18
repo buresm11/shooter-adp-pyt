@@ -1,35 +1,44 @@
 from abc import ABC, abstractmethod
-
 from ..pattern.observer import Observable
+import pyglet
 
+from .objects import Cannon
+import os
 
 class Model(Observable):
 
 	def __init__(self, size):
 		super().__init__()
 		self.size = size
+		self.images = Images()
+		self.cannon = Cannon(self.images.cannon_image(),size)
 
 	def tick(self):
 		self.notify_observers()
 
+	def get_drawables(self):
+		drawables = []
+		drawables.append(self.cannon)	
 
+		return drawables	
 
-class Drawable(ABC):
+class Images():
 
-	def __init__(self, playground_size, location, size):
-		self.playground_size = playground_size
-		self.location = location
-		self.size = size
+	def cannon_image(self):
+		cannon = pyglet.image.load(os.path.dirname(__file__) + '/../res/cannon.png')
+		return cannon
 
-	def get_rect(self):
-		pass
+	def enemy_image(self):
+		enemy = pyglet.image.load(os.path.dirname(__file__) + '/../res/enemy.png')
+		return enemy
 
-	def move_freely(self):
-		pass
+	def missile_image(self):
+		missile = pyglet.image.load(os.path.dirname(__file__) + '/../res/missile.png')
+		return enemy
 
-	def move_bounded(self):
-		return False
-		
+	def blast_image(self):
+		blast = pyglet.image.load(os.path.dirname(__file__) + '/../res/blast.png')
+		return blast
 
 class Size():
 
