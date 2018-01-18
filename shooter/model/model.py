@@ -3,6 +3,7 @@ from ..pattern.observer import Observable
 import pyglet
 
 from .objects import Cannon
+from .objects import SimpleEnemy
 import os
 
 class Model(Observable):
@@ -12,13 +13,17 @@ class Model(Observable):
 		self.size = size
 		self.images = Images()
 		self.cannon = Cannon(self.images.cannon_image(),size)
+		self.enemies = []
+
+		self.make_enemies()
 
 	def tick(self):
 		self.notify_observers()
 
 	def get_drawables(self):
 		drawables = []
-		drawables.append(self.cannon)	
+		drawables.append(self.cannon)
+		drawables.extend(self.enemies)	
 
 		return drawables
 
@@ -31,6 +36,10 @@ class Model(Observable):
 	def rotate_cannon(self, rotation_offset):
 		self.cannon.rotate_cannon(rotation_offset)
 
+	def make_enemies(self):
+		for i in range(15):
+			self.enemies.append(SimpleEnemy(self.images.enemy_image(), self.size))
+
 
 class Images():
 
@@ -39,7 +48,7 @@ class Images():
 		return cannon
 
 	def enemy_image(self):
-		enemy = pyglet.image.load(os.path.dirname(__file__) + '/../res/enemy.png')
+		enemy = pyglet.image.load(os.path.dirname(__file__) + '/../res/enemy1.png')
 		return enemy
 
 	def missile_image(self):

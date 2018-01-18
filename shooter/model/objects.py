@@ -1,6 +1,7 @@
 import pyglet
 import os
 import math
+import random
 
 class Drawable(pyglet.sprite.Sprite):
 
@@ -43,7 +44,6 @@ class Drawable(pyglet.sprite.Sprite):
 
 		return accident
 
-
 class Cannon(Drawable):
 
 	def __init__(self, image, playground_size):
@@ -59,8 +59,27 @@ class Cannon(Drawable):
 
 class Enemy(Drawable):
 
-	def __init__(self):
-		pass
+	def __init__(self, image, playground_size):
+		super().__init__(image, playground_size)
+
+		lowx = int(self.width / 2)
+		lowy = int(self.height / 2)
+
+		highx = int(self.playground_size.x - self.width / 2)
+		highy = int(self.playground_size.y - self.height / 2)
+
+		self.x = random.randint(lowx, highx)
+		self.y = random.randint(lowy, highy)
+
+class SimpleEnemy(Enemy):
+
+	def __init__(self, image, playground_size):
+		super().__init__(image, playground_size)
+
+class SmartEnemy(Enemy):
+
+	def __init__(self, image, playground_size):
+		super().__init__(image, playground_size)
 
 class Blast(Drawable):
 
