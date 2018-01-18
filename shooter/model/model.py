@@ -14,10 +14,16 @@ class Model(Observable):
 		self.images = Images()
 		self.cannon = Cannon(self.images.cannon_image(),size)
 		self.enemies = []
+		self.prepared_missiles = []
+		self.fired_missiles = []
 
 		self.make_enemies()
 
 	def tick(self):
+
+		if self.cannon.ignition_phase == True:
+			self.cannon.add_fire_power()
+
 		self.notify_observers()
 
 	def get_drawables(self):
@@ -28,7 +34,7 @@ class Model(Observable):
 		return drawables
 
 	def fire(self):
-		pass
+		self.cannon.fire()
 
 	def move_cannon(self, offset):
 		self.cannon.move(offset)
@@ -40,6 +46,18 @@ class Model(Observable):
 		for i in range(15):
 			self.enemies.append(SimpleEnemy(self.images.enemy_image(), self.size))
 
+	def order_to_fire(self):
+		self.cannon.ignition_fire()
+
+	def get_hud(self):
+		hud = []
+
+		hud.append("Mode:" )
+		hud.append("Gravity:")
+		hud.append("Firepower:" + str(self.cannon.fire_power))
+		hud.append("Score:")
+
+		return hud
 
 class Images():
 

@@ -13,15 +13,21 @@ class Controller():
 		self.keys_pressed = {}
 		self.commands = []
 
+		self.keys_pressed['space'] = False
+		self.keys_pressed['up'] = False
+		self.keys_pressed['down'] = False
+		self.keys_pressed['left'] = False
+		self.keys_pressed['right'] = False
+
 		self.view.push_handlers(
 			on_key_press=self.key_pressed,
 			on_key_release=self.key_released
 		)
 
-		self.space_pressed = False
-
 	def key_pressed(self, symbol, modifiers):
 		if symbol == key.SPACE:
+			if self.keys_pressed['space'] == False:
+				self.commands.append(OrderToFireCommand(self.model))
 			self.keys_pressed['space'] = True
 		elif symbol == key.UP:
 			self.keys_pressed['up'] = True
@@ -40,6 +46,7 @@ class Controller():
 
 	def key_released(self, symbol, modifiers):
 		if symbol == key.SPACE:
+			self.commands.append(FireCommand(self.model))
 			self.keys_pressed['space'] = False
 		elif symbol == key.UP:
 			self.keys_pressed['up'] = False
@@ -56,27 +63,22 @@ class Controller():
 
 	def tick(self, t):
 
-		if 'up' in self.keys_pressed:
-			if self.keys_pressed['up'] == True:
-				self.commands.append(MoveCannonCommand(self.model, Vector(0,5)))
+		if self.keys_pressed['up'] == True:
+			self.commands.append(MoveCannonCommand(self.model, Vector(0,5)))
 
-		if 'down' in self.keys_pressed:
-			if self.keys_pressed['down'] == True:
-				self.commands.append(MoveCannonCommand(self.model, Vector(0,-5)))
+		if self.keys_pressed['down'] == True:
+			self.commands.append(MoveCannonCommand(self.model, Vector(0,-5)))
 
-		if 'left' in self.keys_pressed:
-			if self.keys_pressed['left'] == True:
-				self.commands.append(RotateCannonCommand(self.model, -0.1))
+		if self.keys_pressed['left'] == True:
+			self.commands.append(RotateCannonCommand(self.model, -0.1))
 
-		if 'right' in self.keys_pressed:
-			if self.keys_pressed['right'] == True:
-				self.commands.append(RotateCannonCommand(self.model, 0.1))
+		if self.keys_pressed['right'] == True:
+			self.commands.append(RotateCannonCommand(self.model, 0.1))
 
 		for command in self.commands:
 			command.execute()
 
 		self.commands.clear()
-
 		self.model.tick()
 
 
@@ -91,8 +93,16 @@ class FireCommand():
 	def __init__(self, model):
 		self.model = model
 
-	def execute():
+	def execute(self):
 		self.model.fire()
+
+class OrderToFireCommand():
+
+	def __init__(self, model):
+		self.model = model
+
+	def execute(self):
+		self.model.order_to_fire()
 
 class MoveCannonCommand():
 

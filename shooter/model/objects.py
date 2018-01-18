@@ -46,16 +46,35 @@ class Drawable(pyglet.sprite.Sprite):
 
 class Cannon(Drawable):
 
+	max_fire_power = 100
+	min_fire_power = 20
+
 	def __init__(self, image, playground_size):
 		super().__init__(image, playground_size)
 
 		self.angle = 0
+		self.fire_power = Cannon.min_fire_power
+		self.ignition_phase = False
 		self.x = self.width / 2
 		self.y = self.playground_size.y / 2 - self.height / 2
  
 	def rotate_cannon(self, rotation_offset):
 		self.angle = math.atan2(math.sin(self.angle + rotation_offset),math.cos(self.angle + rotation_offset))
 		self.rotation = math.degrees(self.angle)
+
+	def ignition_fire(self):
+		self.reset_fire_power()
+		self.ignition_phase = True
+
+	def fire(self):
+		self.ignition_phase = False
+
+	def reset_fire_power(self):
+		self.fire_power = Cannon.min_fire_power
+
+	def add_fire_power(self):
+		if self.fire_power < Cannon.max_fire_power:
+			self.fire_power += 1
 
 class Enemy(Drawable):
 
@@ -81,12 +100,12 @@ class SmartEnemy(Enemy):
 	def __init__(self, image, playground_size):
 		super().__init__(image, playground_size)
 
-class Blast(Drawable):
+class Missile(Drawable):
 
 	def __init__(self):
 		pass
 
-class Missile(Drawable):
+class Blast(Drawable):
 
 	def __init__(self):
 		pass
