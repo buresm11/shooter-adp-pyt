@@ -20,7 +20,14 @@ class Model(Observable):
 		drawables = []
 		drawables.append(self.cannon)	
 
-		return drawables	
+		return drawables
+
+	def fire(self):
+		pass
+
+	def move_cannon(self, offset):
+		self.cannon.move(offset)
+
 
 class Images():
 
@@ -46,7 +53,7 @@ class Size():
 		self.x = x;
 		self.y = y;
 
-class Location():
+class Vector():
 
 	def __init__(self, x, y):
 		self.x = x;
