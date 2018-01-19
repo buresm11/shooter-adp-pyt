@@ -3,10 +3,16 @@ import os
 from abc import ABC, abstractmethod
 
 from ..pattern.observer import Observable
+from ..pattern.factory import SmartFactory
+from ..pattern.factory import SimpleFactory
 from .objects import Cannon
 from .objects import SimpleEnemy
 from .objects import SmartEnemy
 from .data import Situation
+from .data import CannonSituation
+
+DEFAULT_SITUATION = Situation.SIMPLE
+DEFAULT_CANONN_SITUATION = CannonSituation.TWO_MISSILE
 
 class Model(Observable):
 
@@ -19,7 +25,12 @@ class Model(Observable):
 		self.missiles = []
 		self.score = 0
 		self.gravity = 0
-		self.situation = Situation.SIMPLE
+		self.situation = DEFAULT_SITUATION
+
+		if self.situation == Situation.SMART:
+			self.factory = SmartFactory()
+		elif self.situation == Situation.SIMPLE:
+			self.factory = SimpleFactory()
 
 		self.make_enemies()
 
@@ -52,7 +63,7 @@ class Model(Observable):
 
 	def make_enemies(self):
 		for i in range(15):
-			self.enemies.append(SmartEnemy(self.images.enemy_image(), self.size))
+			self.enemies.append(self.factory.createEnemy(self.images.enemy_image(), self.size))
 
 	def order_to_fire(self):
 		self.cannon.ignition_fire()

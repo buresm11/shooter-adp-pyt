@@ -3,7 +3,6 @@ import os
 import math
 import random
 
-from ..pattern.factory import Factory
 from .data import CannonSituation
 from .data import Direction
 from .data import Vector
@@ -104,6 +103,9 @@ class SimpleEnemy(Enemy):
 
 	def __init__(self, image, playground_size):
 		super().__init__(image, playground_size)
+
+	def move(self):
+		pass
 
 class SmartEnemy(Enemy):
 
