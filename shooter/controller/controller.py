@@ -1,9 +1,8 @@
 import pyglet
 from pyglet.window import key
-
-from ..model.objects import Vector
-
 from abc import ABC, abstractmethod
+
+from ..model.data import Vector
 
 class Controller():
 

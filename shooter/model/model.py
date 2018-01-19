@@ -1,12 +1,12 @@
-from abc import ABC, abstractmethod
-from ..pattern.observer import Observable
 import pyglet
+import os
+from abc import ABC, abstractmethod
 
+from ..pattern.observer import Observable
 from .objects import Cannon
 from .objects import SimpleEnemy
 from .objects import SmartEnemy
-from .objects import Situation
-import os
+from .data import Situation
 
 class Model(Observable):
 
@@ -42,6 +42,7 @@ class Model(Observable):
 
 	def fire(self):
 		self.cannon.fire()
+
 
 	def move_cannon(self, offset):
 		self.cannon.move(offset)
@@ -102,10 +103,4 @@ class Images():
 	def blast_image(self):
 		blast = pyglet.image.load(os.path.dirname(__file__) + '/../res/blast.png')
 		return blast
-
-class Size():
-
-	def __init__(self, x, y):
-		self.x = x;
-		self.y = y;
 

@@ -1,9 +1,9 @@
+import pyglet
+
 from .model.model import Model
-from .model.model import Size
+from .model.data import Size
 from .controller.controller import Controller
 from .view.view import View
-
-import pyglet
 
 def main():
 	

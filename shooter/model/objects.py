@@ -3,9 +3,11 @@ import os
 import math
 import random
 
-from enum import Enum
-
 from ..pattern.factory import Factory
+from .data import CannonSituation
+from .data import Direction
+from .data import Vector
+
 
 class Drawable(pyglet.sprite.Sprite):
 
@@ -52,6 +54,7 @@ class Cannon(Drawable):
 
 	max_fire_power = 100
 	min_fire_power = 20
+	default_cannon_situation = CannonSituation.TWO_MISSILE
 
 	def __init__(self, image, playground_size):
 		super().__init__(image, playground_size)
@@ -146,48 +149,14 @@ class SmartEnemy(Enemy):
 
 class Missile(Drawable):
 
-	def __init__(self):
-		pass
+	def __init__(self, image, playground_size, location):
+		super().__init__(image, playground_size)
+
+		self.x = location.x
+		self.y = location.y
 
 class Blast(Drawable):
 
 	def __init__(self):
 		pass
 
-# possible move to another file | downwards
-
-class SimpleFactor(Factory):
-
-	def createEnemy(self, playground_size):
-		return SimpleEnemy(playground_size)
-
-	def createMissile(self, cannon):
-		pass
-
-class SmartFactory(Factory):
-
-	def createEnemy(self, playground_size):
-		return SmartEnemy(playground_size)
-
-	def createMissile(self, cannon):
-		pass
-
-class Situation(Enum):
-	SIMPLE = 1
-	SMART = 2
-
-class CannonSituation(Enum):
-	ONE_MISSILE = 1
-	TWO_MISSILE = 2
-
-class Direction(Enum):
-	EAST = 1
-	WEST = 2
-	NORTH = 3
-	SOUTH = 4
-
-class Vector():
-
-	def __init__(self, x, y):
-		self.x = x;
-		self.y = y;
