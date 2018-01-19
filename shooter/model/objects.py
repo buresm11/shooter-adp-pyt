@@ -5,6 +5,8 @@ import random
 
 from enum import Enum
 
+from ..pattern.factory import Factory
+
 class Drawable(pyglet.sprite.Sprite):
 
 	def __init__(self, image, playground_size):
@@ -61,6 +63,7 @@ class Cannon(Drawable):
 		self.y = self.playground_size.y / 2 - self.height / 2
 
 		self.prepared_missiles = []
+		self.situation = CannonSituation.ONE_MISSILE
  
 	def rotate_cannon(self, rotation_offset):
 		self.angle = math.atan2(math.sin(self.angle + rotation_offset),math.cos(self.angle + rotation_offset))
@@ -153,11 +156,35 @@ class Blast(Drawable):
 
 # possible move to another file | downwards
 
+class SimpleFactor(Factory):
+
+	def createEnemy(self, playground_size):
+		return SimpleEnemy(playground_size)
+
+	def createMissile(self, cannon):
+		pass
+
+class SmartFactory(Factory):
+
+	def createEnemy(self, playground_size):
+		return SmartEnemy(playground_size)
+
+	def createMissile(self, cannon):
+		pass
+
+class Situation(Enum):
+	SIMPLE = 1
+	SMART = 2
+
+class CannonSituation(Enum):
+	ONE_MISSILE = 1
+	TWO_MISSILE = 2
+
 class Direction(Enum):
-		EAST = 1
-		WEST = 2
-		NORTH = 3
-		SOUTH = 4
+	EAST = 1
+	WEST = 2
+	NORTH = 3
+	SOUTH = 4
 
 class Vector():
 

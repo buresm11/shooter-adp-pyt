@@ -5,6 +5,7 @@ import pyglet
 from .objects import Cannon
 from .objects import SimpleEnemy
 from .objects import SmartEnemy
+from .objects import Situation
 import os
 
 class Model(Observable):
@@ -18,6 +19,7 @@ class Model(Observable):
 		self.missiles = []
 		self.score = 0
 		self.gravity = 0
+		self.situation = Situation.SIMPLE
 
 		self.make_enemies()
 
@@ -70,10 +72,16 @@ class Model(Observable):
 	def get_hud(self):
 		hud = []
 
-		hud.append("Mode: " )
-		hud.append("Gravity: " + str(self.gravity))
-		hud.append("Firepower: " + str(self.cannon.fire_power))
-		hud.append("Score: " + str(self.score))
+		s = 'Mode: '
+		if self.situation == Situation.SIMPLE:
+			s += 'simple'
+		elif self.situation == Situation.SMART:
+			s += 'smart'
+
+		hud.append(s)
+		hud.append('Gravity: ' + str(self.gravity))
+		hud.append('Firepower: ' + str(self.cannon.fire_power))
+		hud.append('Score: ' + str(self.score))
 
 		return hud
 
@@ -96,12 +104,6 @@ class Images():
 		return blast
 
 class Size():
-
-	def __init__(self, x, y):
-		self.x = x;
-		self.y = y;
-
-class Vector():
 
 	def __init__(self, x, y):
 		self.x = x;
