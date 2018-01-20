@@ -7,6 +7,9 @@ from .data import CannonSituation
 from .data import Direction
 from .data import Vector
 
+from ..pattern.state import OneMissileCannonState
+from ..pattern.state import TwoMissileCannonState
+
 
 class Drawable(pyglet.sprite.Sprite):
 
@@ -25,7 +28,7 @@ class Drawable(pyglet.sprite.Sprite):
 		self.x += offset.x
 		self.y += offset.y
 
-	def move(self, offset):
+	def move_bounded(self, offset):
 
 		accident = False
 
@@ -49,41 +52,77 @@ class Drawable(pyglet.sprite.Sprite):
 
 		return accident
 
+DEFAULT_MAX_FIRE_POWER = 100
+DEFAULT_MIN_FIRE_POWER = 20
+DEFAULT_CANNON_SITUATION = CannonSituation.ONE_MISSILE
+
 class Cannon(Drawable):
+	
 
-	max_fire_power = 100
-	min_fire_power = 20
-	default_cannon_situation = CannonSituation.TWO_MISSILE
-
-	def __init__(self, image, playground_size):
+	def __init__(self, image, missile_image, playground_size, factory, gravity):
 		super().__init__(image, playground_size)
 
 		self.angle = 0
-		self.fire_power = Cannon.min_fire_power
+		self.fire_power = DEFAULT_MIN_FIRE_POWER
 		self.ignition_phase = False
 		self.x = self.width / 2
-		self.y = self.playground_size.y / 2 - self.height / 2
+		self.y = self.playground_size.y // 2
+		self.factory = factory
+		self.missile_image = missile_image
+		self.gravity = gravity
 
 		self.prepared_missiles = []
-		self.situation = CannonSituation.ONE_MISSILE
+		self.situation = DEFAULT_CANNON_SITUATION
+
+		if self.situation == CannonSituation.ONE_MISSILE:
+			self.state = OneMissileCannonState()
+		elif self.situation == CannonSituation.TWO_MISSILE:
+			self.state = TwoMissileCannonState()
+
+	def move(self, offset):
+		self.move_bounded(offset)
+		self.state.move_missiles(self, self.playground_size)
  
 	def rotate_cannon(self, rotation_offset):
 		self.angle = math.atan2(math.sin(self.angle + rotation_offset),math.cos(self.angle + rotation_offset))
 		self.rotation = math.degrees(self.angle)
 
+		self.state.rotate_missiles(self)
+
 	def ignition_fire(self):
 		self.reset_fire_power()
 		self.ignition_phase = True
 
+		self.prepared_missiles.extend(self.state.create_missiles(self.missile_image, self.playground_size, self))
+
 	def fire(self):
+
+		fired = list(self.prepared_missiles)
+		self.prepared_missiles.clear()
+
+		for f in fired:
+			f.fire(self)
+
 		self.ignition_phase = False
+		self.reset_fire_power()
+
+		return fired
 
 	def reset_fire_power(self):
-		self.fire_power = Cannon.min_fire_power
+		self.fire_power = DEFAULT_MIN_FIRE_POWER
 
 	def add_fire_power(self):
-		if self.fire_power < Cannon.max_fire_power:
+		if self.fire_power < DEFAULT_MAX_FIRE_POWER:
 			self.fire_power += 1
+
+	def switch_mode(self):
+
+		if self.situation == CannonSituation.ONE_MISSILE:
+			self.state = TwoMissileCannonState()
+			self.situation = CannonSituation.TWO_MISSILE
+		elif self.situation == CannonSituation.TWO_MISSILE:
+			self.state = OneMissileCannonState()
+			self.situation = CannonSituation.ONE_MISSILE
 
 class Enemy(Drawable):
 
@@ -119,13 +158,13 @@ class SmartEnemy(Enemy):
 		accident = False
 
 		if self.direction == Direction.EAST:
-			accident = super().move(Vector(3,0))
+			accident = super().move_bounded(Vector(3,0))
 		if self.direction == Direction.NORTH:
-			accident = super().move(Vector(0,3))
+			accident = super().move_bounded(Vector(0,3))
 		if self.direction == Direction.SOUTH:
-			accident = super().move(Vector(0,-3))
+			accident = super().move_bounded(Vector(0,-3))
 		if self.direction == Direction.WEST:
-			accident = super().move(Vector(-3,0))  
+			accident = super().move_bounded(Vector(-3,0))  
 
 		if accident == True:
 			self.set_random_direction()
@@ -151,11 +190,25 @@ class SmartEnemy(Enemy):
 
 class Missile(Drawable):
 
-	def __init__(self, image, playground_size, location):
+	def __init__(self, image, playground_size, location, strategy):
 		super().__init__(image, playground_size)
 
 		self.x = location.x
 		self.y = location.y
+		self.fired = False
+
+		self.strategy = strategy
+
+	def move(self):
+		if self.fired:
+			self.strategy.move(self)
+
+	def fire(self, cannon):
+		self.fired = True
+
+		self.fire_power = cannon.fire_power
+		self.gravity = cannon.gravity
+		self.angle = cannon.angle
 
 class Blast(Drawable):
 

@@ -22,7 +22,11 @@ class View(pyglet.window.Window,Observer):
 		if isinstance(model, Model):
 			drawables = model.get_drawables()
 			for drawable in drawables:
-				drawable.draw()
+				try:
+					drawable.draw()
+				except Exception:
+					print(type(drawable))
+
 
 			self.display_hud_info(model.get_hud())
 			

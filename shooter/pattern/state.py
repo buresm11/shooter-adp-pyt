@@ -2,52 +2,67 @@ from abc import ABC, abstractmethod
 
 from ..model.data import Vector
 
-class State(ABC):
+class CannonState(ABC):
 
 	@abstractmethod
-	def createMissiles(self, cannon, factory, playground_size):
+	def create_missiles(self, image, playground_size, cannon):
 		pass
 
 	@abstractmethod
-	def fireMissiles(self, cannon):
+	def move_missiles(self, cannon , playground_size):
 		pass
 
 	@abstractmethod
-	def moveMissiles(self, cannon):
+	def rotate_missiles(self):
 		pass
 
 
 class OneMissileCannonState(CannonState):
 
-	def createMissiles(self, cannon, factory, playground_size):
+	def create_missiles(self, image, playground_size, cannon):
 		missiles = []
 
-		location = Vector(cannon.x, playground_size // 2)
-		missiles.append(factory.createMissiles(location, playground_size))
+		location = Vector(cannon.x, cannon.y)
+		missiles.append(cannon.factory.create_missile(image, playground_size, location))
 
 		return missiles
 
-	def fireMissiles(self, cannon):
+	def move_missiles(self, cannon, playground_size):
+		
+		if len(cannon.prepared_missiles) == 1:
+			cannon.prepared_missiles[0].x = cannon.x
+			cannon.prepared_missiles[0].y = cannon.y
+
+	def rotate_missiles(self):
 		pass
 
-	def moveMissiles(self, cannon):
+	def fire_missiles(self, cannon):
 		pass
 
 class TwoMissileCannonState(CannonState):
 
-	def createMissiles(self, cannon, factory, playground_size):
+	def create_missiles(self, image, playground_size, cannon):
 		missiles = []
 
-		location = Vector(cannon.x, playground_size.y // 2 + 20)
-		location2 = Vector(cannon.x, playground_size.y // 2 - 20)
+		location = Vector(cannon.x, cannon.y - 20)
+		location2 = Vector(cannon.x, cannon.y + 20)
 
-		missiles.append(factory.createMissiles(location, playground_size))
-		missiles.append(factory.createMissiles(location2, playground_size))
-
+		missiles.append(cannon.factory.create_missile(image, playground_size, location))
+		missiles.append(cannon.factory.create_missile(image, playground_size, location2))	
 		return missiles
 
-	def fireMissiles(self, cannon):
+	def move_missiles(self, cannon , playground_size):
+		
+		if len(cannon.prepared_missiles) == 2:
+			cannon.prepared_missiles[0].x = cannon.x
+			cannon.prepared_missiles[0].y = cannon.y - 20
+
+			cannon.prepared_missiles[1].x = cannon.x
+			cannon.prepared_missiles[1].y = cannon.y + 20
+
+	def rotate_missiles(self):
 		pass
 
-	def moveMissiles(self, cannon):
+	def fire_missiles(self, cannon):
 		pass
+		

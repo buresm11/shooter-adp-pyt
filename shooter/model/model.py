@@ -13,6 +13,7 @@ from .data import CannonSituation
 
 DEFAULT_SITUATION = Situation.SIMPLE
 DEFAULT_CANONN_SITUATION = CannonSituation.TWO_MISSILE
+DEFAULT_GRAVITY = 10
 
 class Model(Observable):
 
@@ -20,11 +21,10 @@ class Model(Observable):
 		super().__init__()
 		self.size = size
 		self.images = Images()
-		self.cannon = Cannon(self.images.cannon_image(),size)
 		self.enemies = []
 		self.missiles = []
 		self.score = 0
-		self.gravity = 0
+		self.gravity = DEFAULT_GRAVITY
 		self.situation = DEFAULT_SITUATION
 
 		if self.situation == Situation.SMART:
@@ -32,12 +32,16 @@ class Model(Observable):
 		elif self.situation == Situation.SIMPLE:
 			self.factory = SimpleFactory()
 
+		self.cannon = Cannon(self.images.cannon_image(), self.images.missile_image(), size, self.factory, self.gravity)
 		self.make_enemies()
 
 	def tick(self):
 
 		for enemy in self.enemies:
 			enemy.move()
+
+		for missile in self.missiles:
+			missile.move()
 
 		if self.cannon.ignition_phase == True:
 			self.cannon.add_fire_power()
@@ -48,12 +52,13 @@ class Model(Observable):
 		drawables = []
 		drawables.append(self.cannon)
 		drawables.extend(self.enemies)	
+		drawables.extend(self.cannon.prepared_missiles)
+		drawables.extend(self.missiles)
 
 		return drawables
 
 	def fire(self):
-		self.cannon.fire()
-
+		self.missiles.extend(self.cannon.fire())
 
 	def move_cannon(self, offset):
 		self.cannon.move(offset)
@@ -63,7 +68,7 @@ class Model(Observable):
 
 	def make_enemies(self):
 		for i in range(15):
-			self.enemies.append(self.factory.createEnemy(self.images.enemy_image(), self.size))
+			self.enemies.append(self.factory.create_enemy(self.images.enemy_image(), self.size))
 
 	def order_to_fire(self):
 		self.cannon.ignition_fire()
@@ -71,15 +76,30 @@ class Model(Observable):
 	def change_gravity(self, gravity_offset):
 		if self.gravity + gravity_offset > 0 and self.gravity + gravity_offset < 20:
 			self.gravity += gravity_offset
+			self.cannon.gravity = self.gravity
 
 	def go_back(self):
 		pass
 
 	def switch_mode(self):
-		pass
+
+		if self.situation == Situation.SMART:
+			self.factory = SimpleFactory()
+			self.situation = Situation.SIMPLE
+		elif self.situation == Situation.SIMPLE:
+			self.factory = SmartFactory()
+			self.situation = Situation.SMART
+
+		self.cannon.factory = self.factory
+
+		enemies_size = len(self.enemies)
+		self.enemies.clear()
+
+		for i in range(enemies_size):
+			self.enemies.append(self.factory.create_enemy(self.images.enemy_image(), self.size))
 
 	def switch_cannon_mode(self):
-		pass
+		self.cannon.switch_mode()
 
 	def get_hud(self):
 		hud = []
@@ -89,6 +109,11 @@ class Model(Observable):
 			s += 'simple'
 		elif self.situation == Situation.SMART:
 			s += 'smart'
+
+		if self.cannon.situation == CannonSituation.ONE_MISSILE:
+			s += ' | one missile'
+		elif self.cannon.situation == CannonSituation.TWO_MISSILE:
+			s += ' | two missile'
 
 		hud.append(s)
 		hud.append('Gravity: ' + str(self.gravity))
@@ -109,7 +134,7 @@ class Images():
 
 	def missile_image(self):
 		missile = pyglet.image.load(os.path.dirname(__file__) + '/../res/missile.png')
-		return enemy
+		return missile
 
 	def blast_image(self):
 		blast = pyglet.image.load(os.path.dirname(__file__) + '/../res/blast.png')
