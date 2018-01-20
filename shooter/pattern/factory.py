@@ -15,7 +15,7 @@ class Factory(ABC):
 		pass
 
 	@abstractmethod
-	def create_missile(self, image, playground_size, location):
+	def create_missile(self, image, playground_size, location, rotation):
 		pass
 
 class SimpleFactory(Factory):
@@ -23,13 +23,13 @@ class SimpleFactory(Factory):
 	def create_enemy(self, image, playground_size):
 		return SimpleEnemy(image, playground_size)
 
-	def create_missile(self, image, playground_size, location):
-		return Missile(image, playground_size, location, SimpleStrategy())
+	def create_missile(self, image, playground_size, location, rotation):
+		return Missile(image, playground_size, location, rotation, SimpleStrategy())
 
 class SmartFactory(Factory):
 
 	def create_enemy(self, image, playground_size):
 		return SmartEnemy(image, playground_size)
 
-	def create_missile(self, image, playground_size, location):
-		return Missile(image, playground_size, location, SmartStrategy())
+	def create_missile(self, image, playground_size, location, rotation):
+		return Missile(image, playground_size, location, rotation, SmartStrategy())

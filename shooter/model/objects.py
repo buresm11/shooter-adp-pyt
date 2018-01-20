@@ -190,14 +190,14 @@ class SmartEnemy(Enemy):
 
 class Missile(Drawable):
 
-	def __init__(self, image, playground_size, location, strategy):
+	def __init__(self, image, playground_size, location, rotation, strategy):
 		super().__init__(image, playground_size)
 
 		self.x = location.x
 		self.y = location.y
-		self.fired = False
-
+		self.rotation =rotation
 		self.strategy = strategy
+		self.fired = False
 
 	def move(self):
 		if self.fired:
