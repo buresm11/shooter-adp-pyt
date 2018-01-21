@@ -197,16 +197,20 @@ class Missile(Drawable):
 		self.lasty = 0
 
 
-	def move(self, enemies, blasts):
+	def move(self, enemies, blasts, blast_image):
 		if self.fired:
 			self.strategy.move(self)
 
 		hits = 0 
 		enemies_count = len(enemies)
 		
+		shot_down = [e for e in enemies if e.get_rect().intersect(self.get_rect())]
 		enemies[:] = [e for e in enemies if not e.get_rect().intersect(self.get_rect())]
 
-		return enemies_count - len(enemies)
+		for shot in shot_down:
+			blasts.append(Blast(blast_image, self.playground_size, Vector(shot.x, shot.y)))
+
+		return len(shot_down)
 
 	def fire(self, fire_power, gravity, angle):
 		self.fired_pos = Vector(self.x, self.y)
@@ -218,6 +222,10 @@ class Missile(Drawable):
 
 class Blast(Drawable):
 
-	def __init__(self):
-		pass
+	def __init__(self, image, playground_size, location):
+		super().__init__(image, playground_size)
+
+		self.x = location.x
+		self.y = location.y
+		
 

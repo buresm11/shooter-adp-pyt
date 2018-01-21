@@ -44,7 +44,7 @@ class Model(Observable):
 			enemy.move()
 
 		for missile in self.missiles:
-			self.score += missile.move(self.enemies, self.blasts)
+			self.score += missile.move(self.enemies, self.blasts, self.images.blast_image())
 
 		if self.cannon.ignition_phase == True:
 			self.cannon.add_fire_power()
@@ -62,6 +62,7 @@ class Model(Observable):
 		drawables.extend(self.enemies)	
 		drawables.extend(self.cannon.prepared_missiles)
 		drawables.extend(self.missiles)
+		drawables.extend(self.blasts)
 
 		return drawables
 
