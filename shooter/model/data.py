@@ -35,13 +35,7 @@ class Rect():
 
 	def intersect(self, rect):
 
-		print(rect.right_top.x)
-		print(self.left_bottom.x)
-
 		res = not (self.left_bottom.x > rect.right_top.x or self.right_top.x < rect.left_bottom.x or \
 			self.right_top.y < rect.left_bottom.y or self.left_bottom.y > rect.right_top.y)
-
-		print(res)
-		print("")
 
 		return res

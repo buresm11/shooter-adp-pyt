@@ -197,9 +197,16 @@ class Missile(Drawable):
 		self.lasty = 0
 
 
-	def move(self):
+	def move(self, enemies, blasts):
 		if self.fired:
 			self.strategy.move(self)
+
+		hits = 0 
+		enemies_count = len(enemies)
+		
+		enemies[:] = [e for e in enemies if not e.get_rect().intersect(self.get_rect())]
+
+		return enemies_count - len(enemies)
 
 	def fire(self, fire_power, gravity, angle):
 		self.fired_pos = Vector(self.x, self.y)

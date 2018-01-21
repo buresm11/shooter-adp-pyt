@@ -25,6 +25,7 @@ class Model(Observable):
 		self.images = Images()
 		self.enemies = []
 		self.missiles = []
+		self.blasts = []
 		self.score = 0
 		self.gravity = DEFAULT_GRAVITY
 		self.situation = DEFAULT_SITUATION
@@ -43,7 +44,7 @@ class Model(Observable):
 			enemy.move()
 
 		for missile in self.missiles:
-			missile.move()
+			self.score += missile.move(self.enemies, self.blasts)
 
 		if self.cannon.ignition_phase == True:
 			self.cannon.add_fire_power()
@@ -51,7 +52,7 @@ class Model(Observable):
 		self.remove_out_of_bound_missiles()
 
 		if len(self.enemies) == 0:
-			make_enemies()
+			self.make_enemies()
 
 		self.notify_observers()
 
@@ -81,11 +82,8 @@ class Model(Observable):
 		self.cannon.ignition_fire()
 
 	def remove_out_of_bound_missiles(self):
-		print(len(self.missiles))
-
 		self.missiles = [m for m in self.missiles if m.get_rect().intersect(Rect(Vector(0,0), Vector(self.size.x, self.size.y)))]
 		
-
 	def change_gravity(self, gravity_offset):
 		if self.gravity + gravity_offset > 0 and self.gravity + gravity_offset < 20:
 			self.gravity += gravity_offset
