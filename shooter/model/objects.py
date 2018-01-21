@@ -199,6 +199,10 @@ class Missile(Drawable):
 		self.strategy = strategy
 		self.fired = False
 
+		self.lastx = 0
+		self.lasty = 0
+
+
 	def move(self):
 		if self.fired:
 			self.strategy.move(self)
@@ -209,6 +213,7 @@ class Missile(Drawable):
 		self.fire_power = cannon.fire_power
 		self.gravity = cannon.gravity
 		self.angle = cannon.angle
+		self.time = 0
 
 class Blast(Drawable):
 

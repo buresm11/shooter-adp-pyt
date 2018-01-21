@@ -1,5 +1,6 @@
-from abc import ABC, abstractmethod
+import math
 
+from abc import ABC, abstractmethod
 
 class Strategy(ABC):
 
@@ -10,10 +11,24 @@ class Strategy(ABC):
 class SimpleStrategy(Strategy):
 
 	def move(self, missile):
-		missile.x += missile.fire_power
+		missile.time += 0.2
+
+		missile.x += (missile.fire_power) * math.cos(missile.angle)
+		missile.y -= (missile.fire_power) * math.sin(missile.angle)
 
 class SmartStrategy(Strategy):
 
 	def move(self, missile):
-		missile.x += 1
-		missile.y += 2
+		missile.time += 0.2
+		gra = -9.8
+
+		missile.lastx = missile.x
+		missile.lasty = missile.y
+
+		missile.x =  20 + missile.fire_power * missile.time * math.cos(missile.angle)
+		missile.y =	 300 - missile.fire_power * missile.time * math.sin(missile.angle) + 1/2*gra*missile.time*missile.time
+
+		x = missile.x - missile.lastx
+		y =  missile.lasty - missile.y
+
+		missile.rotation = math.degrees(math.atan2(y,x))
