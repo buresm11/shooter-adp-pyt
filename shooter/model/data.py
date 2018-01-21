@@ -26,3 +26,22 @@ class Size():
 	def __init__(self, x, y):
 		self.x = x;
 		self.y = y;
+
+class Rect():
+
+	def __init__(self, left_bottom, right_top):
+		self.left_bottom = left_bottom
+		self.right_top = right_top
+
+	def intersect(self, rect):
+
+		print(rect.right_top.x)
+		print(self.left_bottom.x)
+
+		res = not (self.left_bottom.x > rect.right_top.x or self.right_top.x < rect.left_bottom.x or \
+			self.right_top.y < rect.left_bottom.y or self.left_bottom.y > rect.right_top.y)
+
+		print(res)
+		print("")
+
+		return res

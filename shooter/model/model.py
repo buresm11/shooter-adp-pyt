@@ -10,6 +10,8 @@ from .objects import SimpleEnemy
 from .objects import SmartEnemy
 from .data import Situation
 from .data import CannonSituation
+from .data import Vector
+from .data import Rect
 
 DEFAULT_SITUATION = Situation.SIMPLE
 DEFAULT_CANONN_SITUATION = CannonSituation.TWO_MISSILE
@@ -46,6 +48,11 @@ class Model(Observable):
 		if self.cannon.ignition_phase == True:
 			self.cannon.add_fire_power()
 
+		self.remove_out_of_bound_missiles()
+
+		if len(self.enemies) == 0:
+			make_enemies()
+
 		self.notify_observers()
 
 	def get_drawables(self):
@@ -72,6 +79,12 @@ class Model(Observable):
 
 	def order_to_fire(self):
 		self.cannon.ignition_fire()
+
+	def remove_out_of_bound_missiles(self):
+		print(len(self.missiles))
+
+		self.missiles = [m for m in self.missiles if m.get_rect().intersect(Rect(Vector(0,0), Vector(self.size.x, self.size.y)))]
+		
 
 	def change_gravity(self, gravity_offset):
 		if self.gravity + gravity_offset > 0 and self.gravity + gravity_offset < 20:

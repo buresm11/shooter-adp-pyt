@@ -6,6 +6,7 @@ import random
 from .data import CannonSituation
 from .data import Direction
 from .data import Vector
+from .data import Rect
 
 from ..pattern.state import OneMissileCannonState
 from ..pattern.state import TwoMissileCannonState
@@ -22,7 +23,8 @@ class Drawable(pyglet.sprite.Sprite):
 		self.playground_size = playground_size
 
 	def get_rect(self):
-		pass
+		return Rect(Vector(self.x - self.width  // 2, self.y - self.height // 2),
+			Vector(self.x + self.width  // 2, self.y + self.height // 2))
 
 	def move_freely(self, offset):
 		self.x += offset.x
@@ -58,7 +60,6 @@ DEFAULT_CANNON_SITUATION = CannonSituation.ONE_MISSILE
 
 class Cannon(Drawable):
 	
-
 	def __init__(self, image, missile_image, playground_size, factory, gravity):
 		super().__init__(image, playground_size)
 
