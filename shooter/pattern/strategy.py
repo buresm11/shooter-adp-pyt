@@ -25,8 +25,8 @@ class SmartStrategy(Strategy):
 		missile.lastx = missile.x
 		missile.lasty = missile.y
 
-		missile.x =  20 + missile.fire_power * missile.time * math.cos(missile.angle)
-		missile.y =	 300 - missile.fire_power * missile.time * math.sin(missile.angle) + 1/2*gra*missile.time*missile.time
+		missile.x =  missile.fired_pos.x + missile.fire_power * missile.time * math.cos(missile.angle)
+		missile.y =	 missile.fired_pos.y - missile.fire_power * missile.time * math.sin(missile.angle) + 1/2*gra*missile.time*missile.time
 
 		x = missile.x - missile.lastx
 		y =  missile.lasty - missile.y

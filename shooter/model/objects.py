@@ -97,17 +97,7 @@ class Cannon(Drawable):
 		self.prepared_missiles.extend(self.state.create_missiles(self.missile_image, self.playground_size, self))
 
 	def fire(self):
-
-		fired = list(self.prepared_missiles)
-		self.prepared_missiles.clear()
-
-		for f in fired:
-			f.fire(self)
-
-		self.ignition_phase = False
-		self.reset_fire_power()
-
-		return fired
+		return self.state.fire_missiles(self)
 
 	def reset_fire_power(self):
 		self.fire_power = DEFAULT_MIN_FIRE_POWER
@@ -191,12 +181,15 @@ class SmartEnemy(Enemy):
 
 class Missile(Drawable):
 
-	def __init__(self, image, playground_size, location, rotation, strategy):
+	def __init__(self, image, playground_size, location, angle, strategy):
 		super().__init__(image, playground_size)
 
 		self.x = location.x
 		self.y = location.y
-		self.rotation =rotation
+
+		self.angle = angle
+		self.rotation = math.degrees(self.angle)
+
 		self.strategy = strategy
 		self.fired = False
 
@@ -208,12 +201,12 @@ class Missile(Drawable):
 		if self.fired:
 			self.strategy.move(self)
 
-	def fire(self, cannon):
+	def fire(self, fire_power, gravity, angle):
+		self.fired_pos = Vector(self.x, self.y)
 		self.fired = True
-
-		self.fire_power = cannon.fire_power
-		self.gravity = cannon.gravity
-		self.angle = cannon.angle
+		self.fire_power = fire_power
+		self.gravity = gravity
+		self.angle = angle
 		self.time = 0
 
 class Blast(Drawable):
