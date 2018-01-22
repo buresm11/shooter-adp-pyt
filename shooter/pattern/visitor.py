@@ -10,10 +10,10 @@ class Visitor():
 		self.enemies = []
 
 	def visit_simple_enemy(self, simple_enemy):
-		self.enemies.append(('simple', simple_enemy.x, simple_enemy.y))
+		self.enemies.append((simple_enemy.x, simple_enemy.y))
 
 	def visit_smart_enemy(self, smart_enemy):
-		self.enemies.append(('smart', simple_enemy.x, simple_enemy.y))
+		self.enemies.append((smart_enemy.x, smart_enemy.y))
 
 	def visit_cannon(self, cannon):
 		self.data['cannon_x'] = cannon.x

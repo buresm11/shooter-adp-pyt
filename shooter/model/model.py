@@ -2,6 +2,7 @@ import pyglet
 import os
 from abc import ABC, abstractmethod
 from copy import deepcopy
+import pickle
 
 from ..pattern.observer import Observable
 from ..pattern.factory import SmartFactory
@@ -31,14 +32,16 @@ class Model(Observable):
 		self.score = 0
 		self.gravity = DEFAULT_GRAVITY
 		self.situation = DEFAULT_SITUATION
+		self.set_situation()
 
+		self.cannon = Cannon(self.images.cannon_image(), self.images.missile_image(), size, DEFAULT_CANONN_SITUATION, self.factory, self.gravity)
+		self.make_enemies()
+
+	def set_situation(self):
 		if self.situation == Situation.SMART:
 			self.factory = SmartFactory()
 		elif self.situation == Situation.SIMPLE:
 			self.factory = SimpleFactory()
-
-		self.cannon = Cannon(self.images.cannon_image(), self.images.missile_image(), size, self.factory, self.gravity)
-		self.make_enemies()
 
 	def tick(self):
 
@@ -98,6 +101,12 @@ class Model(Observable):
 		if self.gravity + gravity_offset > 0 and self.gravity + gravity_offset < 20:
 			self.gravity += gravity_offset
 			self.cannon.gravity = self.gravity
+
+	def set_situation(self):
+		if self.situation == Situation.SMART:
+			self.factory = SmartFactory()
+		elif self.situation == Situation.SIMPLE:
+			self.factory = SimpleFactory()
 
 	def switch_mode(self):
 
@@ -159,7 +168,42 @@ class Model(Observable):
 
 		self.missiles.clear()
 		self.blasts.clear()
+
 		self.notify_observers()
+
+	def load_from_file(self):
+		print("load")
+		data = self.get_data_from_file()
+
+		self.blasts.clear()
+		self.missiles.clear()
+
+		self.gravity = data['gravity']
+		self.score = data['score']
+		self.situation = data['situation']
+		self.set_situation()
+
+		cannon_situation = data['cannon_situation']
+		self.cannon = Cannon(self.images.cannon_image(), self.images.missile_image(), self.size, cannon_situation, self.factory, self.gravity)
+
+		enemies = data['enemies']
+		self.enemies.clear()
+
+		for e in enemies:
+			enemy = self.factory.create_enemy(self.images.enemy_image(), self.size)
+			enemy.x = e[0]
+			enemy.y = e[1]
+			self.enemies.append(enemy)
+
+		self.notify_observers()
+	
+	def get_data_from_file(self):
+
+		path = os.path.dirname(__file__) + '/../res/save'
+		with open(path, 'rb') as f:
+			return pickle.load(f)
+
+		print("loaded")
 
 	def accept(self, visitor):
 		visitor.visit_model(self)

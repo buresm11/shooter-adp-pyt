@@ -193,7 +193,7 @@ class LoadCommand():
 		self.model = model
 
 	def execute(self):
-		pass
+		self.model.load_from_file()
 
 class SaveCommand():
 

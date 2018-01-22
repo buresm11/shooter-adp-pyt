@@ -62,5 +62,8 @@ class ModelProxy(Observable):
 	def get_from_memento(self, memento):
 		self.model.get_from_memento(memento)
 
+	def load_from_file(self):
+		self.model.load_from_file()
+
 	def accept(self, visitor):
 		self.model.accept(visitor)

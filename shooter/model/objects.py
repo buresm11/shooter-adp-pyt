@@ -56,11 +56,10 @@ class Drawable(pyglet.sprite.Sprite):
 
 DEFAULT_MAX_FIRE_POWER = 100
 DEFAULT_MIN_FIRE_POWER = 20
-DEFAULT_CANNON_SITUATION = CannonSituation.ONE_MISSILE
 
 class Cannon(Drawable):
 	
-	def __init__(self, image, missile_image, playground_size, factory, gravity):
+	def __init__(self, image, missile_image, playground_size, default_situation, factory, gravity):
 		super().__init__(image, playground_size)
 
 		self.angle = 0
@@ -73,7 +72,7 @@ class Cannon(Drawable):
 		self.gravity = gravity
 
 		self.prepared_missiles = []
-		self.situation = DEFAULT_CANNON_SITUATION
+		self.situation = default_situation
 
 		if self.situation == CannonSituation.ONE_MISSILE:
 			self.state = OneMissileCannonState()
@@ -116,14 +115,13 @@ class Cannon(Drawable):
 			self.situation = CannonSituation.ONE_MISSILE
 
 	def copy(self):
-		copy = Cannon(self.image, self.missile_image, self.playground_size, self.factory, self.gravity)
+		copy = Cannon(self.image, self.missile_image, self.playground_size, self.situation, self.factory, self.gravity)
 		copy.ignition_phase = False
 		copy.angle = self.angle
 		copy.fire_power = self.fire_power
 		copy.x = self.x
 		copy.y = self.y
-		copy.situation = self.situation
-
+		
 		return copy
 
 	def accept(self, visitor):
@@ -159,7 +157,7 @@ class SimpleEnemy(Enemy):
 		return copy
 
 	def accept(self, visitor):
-		visitor.visit_simple_enemy(self)
+		visitor.visit_simple_enemy(self.copy())
 
 class SmartEnemy(Enemy):
 
@@ -210,7 +208,7 @@ class SmartEnemy(Enemy):
 
 
 	def accept(self, visitor):
-		visitor.visit_smart_enemy(self)
+		visitor.visit_smart_enemy(self.copy())
 
 
 class Missile(Drawable):
