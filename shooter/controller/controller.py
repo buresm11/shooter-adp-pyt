@@ -1,10 +1,13 @@
 import pyglet
 from pyglet.window import key
 from abc import ABC, abstractmethod
+import contextlib
+import os
 
 from ..model.data import Vector
 from ..pattern.memento import Memento
 from ..pattern.memento import ModelCareTaker
+from ..pattern.visitor import Visitor
 
 class Controller():
 
@@ -54,11 +57,11 @@ class Controller():
 		elif symbol == key.W:
 			self.commands.append(SwitchCannonModeCommand(self.model_care_taker, self.model))
 		elif symbol == key.R:
-			pass
+			self.commands.append(ResetCommand())
 		elif symbol == key.E:
-			pass
+			self.commands.append(LoadCommand(self.model))
 		elif symbol == key.T:
-			pass
+			self.commands.append(SaveCommand(self.model))
 
 	def key_released(self, symbol, modifiers):
 		if symbol == key.SPACE:
@@ -198,12 +201,20 @@ class SaveCommand():
 		self.model = model
 		
 	def execute(self):
-		pass
+
+		visitor = Visitor()
+
+		drawables = self.model.get_drawables()
+
+		for d in drawables:
+			d.accept(visitor)
+
+		self.model.accept(visitor)
+		visitor.save()
 
 class ResetCommand():
 
-	def __init__(self):
-		pass
-
 	def execute(self):
-		pass
+		path = os.path.dirname(__file__) + '/../res/save'
+		with contextlib.suppress(FileNotFoundError):
+			os.remove(path)
