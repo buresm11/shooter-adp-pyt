@@ -126,6 +126,9 @@ class Cannon(Drawable):
 
 		return copy
 
+	def accept(self, visitor):
+		visitor.visit_cannon(self)
+
 class Enemy(Drawable):
 
 	def __init__(self, image, playground_size):
@@ -148,10 +151,15 @@ class SimpleEnemy(Enemy):
 	def move(self):
 		pass
 
-	def copy():
+	def copy(self):
 		copy = SimpleEnemy(self.image,self.playground_size.copy())
 		copy.x = self.x
 		copy.y = self.y
+
+		return copy
+
+	def accept(self, visitor):
+		visitor.visit_simple_enemy(self)
 
 class SmartEnemy(Enemy):
 
@@ -181,11 +189,12 @@ class SmartEnemy(Enemy):
 			if value < 20:
 				self.set_random_direction()
 
-	def copy():
+	def copy(self):
 		copy = SmartEnemy(self.image,self.playground_size.copy())
 		copy.x = self.x
 		copy.y = self.y
 			
+		return copy
 
 	def set_random_direction(self):
 		value = random.randint(0, 500)
@@ -198,6 +207,10 @@ class SmartEnemy(Enemy):
 			self.direction = Direction.SOUTH
 		else:
 			self.direction = Direction.WEST
+
+
+	def accept(self, visitor):
+		visitor.visit_smart_enemy(self)
 
 
 class Missile(Drawable):
@@ -241,6 +254,9 @@ class Missile(Drawable):
 		self.angle = angle
 		self.time = 0
 
+	def accept(self, visitor):
+		visitor.visit_missile(self)
+
 class Blast(Drawable):
 
 	def __init__(self, image, playground_size, location):
@@ -256,5 +272,9 @@ class Blast(Drawable):
 
 	def is_active(self):
 		return self.lifetime < 20
+
+	def accept(self, visitor):
+		visitor.visit_blast(self)
+
 		
 

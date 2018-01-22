@@ -99,9 +99,6 @@ class Model(Observable):
 			self.gravity += gravity_offset
 			self.cannon.gravity = self.gravity
 
-	def go_back(self):
-		pass
-
 	def switch_mode(self):
 
 		if self.situation == Situation.SMART:
@@ -145,7 +142,12 @@ class Model(Observable):
 
 	def save_to_memento(self):
 
-		return Memento(self.cannon.copy(),self.enemies, self.factory, self.gravity, self.situation)
+		enemies_copy = []
+
+		for e in self.enemies:
+			enemies_copy.append(e.copy())
+
+		return Memento(self.cannon.copy(),enemies_copy, self.factory, self.gravity, self.situation, self.score)
 
 	def get_from_memento(self, memento):
 		self.cannon = memento.cannon
@@ -153,10 +155,14 @@ class Model(Observable):
 		self.factory = memento.factory
 		self.gravity = memento.gravity
 		self.situation = memento.situation
+		self.score = memento.score
 
 		self.missiles.clear()
-		self.blast.clear()
+		self.blasts.clear()
 		self.notify_observers()
+
+	def accept(self, visitor):
+		visitor.visit_model(self)
 
 class Images():
 

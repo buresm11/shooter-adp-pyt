@@ -47,9 +47,6 @@ class ModelProxy(Observable):
 	def change_gravity(self, gravity_offset):
 		self.model.change_gravity(gravity_offset)
 
-	def go_back(self):
-		self.model.go_back()
-
 	def switch_mode(self):
 		self.model.switch_mode()
 
@@ -64,3 +61,6 @@ class ModelProxy(Observable):
 		
 	def get_from_memento(self, memento):
 		self.model.get_from_memento(memento)
+
+	def accept(self, visitor):
+		self.model.accept(visitor)

@@ -53,6 +53,12 @@ class Controller():
 			self.commands.append(SwitchModeCommand(self.model_care_taker, self.model))
 		elif symbol == key.W:
 			self.commands.append(SwitchCannonModeCommand(self.model_care_taker, self.model))
+		elif symbol == key.R:
+			pass
+		elif symbol == key.E:
+			pass
+		elif symbol == key.T:
+			pass
 
 	def key_released(self, symbol, modifiers):
 		if symbol == key.SPACE:
@@ -133,6 +139,7 @@ class RotateCannonCommand():
 		self.rotation_offset = rotation_offset
 
 	def execute(self):
+		self.model_care_taker.add(self.model.save_to_memento())
 		self.model.rotate_cannon(self.rotation_offset)
 
 class ChangeGravityCommand():
@@ -143,6 +150,7 @@ class ChangeGravityCommand():
 		self.gravity_offset = gravity_offset
 
 	def execute(self):
+		self.model_care_taker.add(self.model.save_to_memento())
 		self.model.change_gravity(self.gravity_offset)
 
 class GoBackCommand():
@@ -152,7 +160,9 @@ class GoBackCommand():
 		self.model = model;
 
 	def execute(self):
-		self.model.go_back()
+		memento = self.model_care_taker.get_last();
+		if memento is not None:
+			self.model.get_from_memento(memento);
 
 class SwitchModeCommand():
 
@@ -161,6 +171,7 @@ class SwitchModeCommand():
 		self.model = model;
 
 	def execute(self):
+		self.model_care_taker.add(self.model.save_to_memento())
 		self.model.switch_mode()
 
 class SwitchCannonModeCommand():
@@ -170,8 +181,29 @@ class SwitchCannonModeCommand():
 		self.model = model;
 
 	def execute(self):
+		self.model_care_taker.add(self.model.save_to_memento())
 		self.model.switch_cannon_mode()
 
+class LoadCommand():
 
+	def __init__(self, model):
+		self.model = model
 
+	def execute(self):
+		pass
 
+class SaveCommand():
+
+	def __init__(self, model):
+		self.model = model
+		
+	def execute(self):
+		pass
+
+class ResetCommand():
+
+	def __init__(self):
+		pass
+
+	def execute(self):
+		pass

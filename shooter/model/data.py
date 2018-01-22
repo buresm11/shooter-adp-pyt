@@ -21,7 +21,7 @@ class Vector():
 		self.x = x;
 		self.y = y;
 
-	def copy():
+	def copy(self):
 		return Vector(self.x, self.y)
 
 class Size():
@@ -30,7 +30,7 @@ class Size():
 		self.x = x;
 		self.y = y;
 
-	def copy():
+	def copy(self):
 		return Size(self.x, self.y)
 
 class Rect():
