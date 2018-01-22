@@ -227,5 +227,14 @@ class Blast(Drawable):
 
 		self.x = location.x
 		self.y = location.y
+
+		self.lifetime = 0
+
+	def increase_lifetime(self):
+		self.lifetime += 1
+
+	def is_active(self):
+		print(self.lifetime)
+		return self.lifetime < 20
 		
 

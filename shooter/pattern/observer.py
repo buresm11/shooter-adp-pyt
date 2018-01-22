@@ -9,7 +9,7 @@ class Observable(ABC):
 		if not isinstance(observer, Observer):
 			raise TypeError("must be of type Observer")
 		elif observer not in self.obs:
-			self.obs.append(observer)	
+			self.obs.append(observer)
 
 	def remove_observer(self, observer):
 		if not isinstance(observer, Observer):

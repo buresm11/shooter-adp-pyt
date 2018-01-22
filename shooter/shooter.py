@@ -1,5 +1,6 @@
 import pyglet
 
+from .model.modelproxy import ModelProxy
 from .model.model import Model
 from .model.data import Size
 from .controller.controller import Controller
@@ -9,7 +10,7 @@ def main():
 	
 	playground_size = Size(800,600)
 
-	model = Model(playground_size)
+	model = ModelProxy(playground_size)
 
 	view = View(playground_size)
 	model.add_observer(view)

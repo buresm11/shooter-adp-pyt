@@ -19,16 +19,11 @@ class View(pyglet.window.Window,Observer):
 	def update(self, model):
 		self.clear()
 
-		if isinstance(model, Model):
-			drawables = model.get_drawables()
-			for drawable in drawables:
-				try:
-					drawable.draw()
-				except Exception:
-					print(type(drawable))
+		drawables = model.get_drawables()
+		for drawable in drawables:
+			drawable.draw()
 
-
-			self.display_hud_info(model.get_hud())
+		self.display_hud_info(model.get_hud())
 			
 
 	def display_hud_info(self, hud):

@@ -46,9 +46,13 @@ class Model(Observable):
 		for missile in self.missiles:
 			self.score += missile.move(self.enemies, self.blasts, self.images.blast_image())
 
+		for blast in self.blasts:
+			blast.increase_lifetime()
+
 		if self.cannon.ignition_phase == True:
 			self.cannon.add_fire_power()
 
+		self.remove_non_active_blasts()
 		self.remove_out_of_bound_missiles()
 
 		if len(self.enemies) == 0:
@@ -84,6 +88,9 @@ class Model(Observable):
 
 	def remove_out_of_bound_missiles(self):
 		self.missiles = [m for m in self.missiles if m.get_rect().intersect(Rect(Vector(0,0), Vector(self.size.x, self.size.y)))]
+
+	def remove_non_active_blasts(self):
+		self.blasts = [b for b in self.blasts if b.is_active()]
 		
 	def change_gravity(self, gravity_offset):
 		if self.gravity + gravity_offset > 0 and self.gravity + gravity_offset < 20:
