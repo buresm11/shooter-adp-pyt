@@ -58,3 +58,9 @@ class ModelProxy(Observable):
 
 	def get_hud(self):
 		self.model.get_hud()
+
+	def save_to_memento(self):
+		return self.model.save_to_memento()
+		
+	def get_from_memento(self, memento):
+		self.model.get_from_memento(memento)

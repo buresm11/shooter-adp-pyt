@@ -115,6 +115,17 @@ class Cannon(Drawable):
 			self.state = OneMissileCannonState()
 			self.situation = CannonSituation.ONE_MISSILE
 
+	def copy(self):
+		copy = Cannon(self.image, self.missile_image, self.playground_size, self.factory, self.gravity)
+		copy.ignition_phase = False
+		copy.angle = self.angle
+		copy.fire_power = self.fire_power
+		copy.x = self.x
+		copy.y = self.y
+		copy.situation = self.situation
+
+		return copy
+
 class Enemy(Drawable):
 
 	def __init__(self, image, playground_size):
@@ -136,6 +147,11 @@ class SimpleEnemy(Enemy):
 
 	def move(self):
 		pass
+
+	def copy():
+		copy = SimpleEnemy(self.image,self.playground_size.copy())
+		copy.x = self.x
+		copy.y = self.y
 
 class SmartEnemy(Enemy):
 
@@ -164,7 +180,12 @@ class SmartEnemy(Enemy):
 
 			if value < 20:
 				self.set_random_direction()
-		
+
+	def copy():
+		copy = SmartEnemy(self.image,self.playground_size.copy())
+		copy.x = self.x
+		copy.y = self.y
+			
 
 	def set_random_direction(self):
 		value = random.randint(0, 500)
@@ -234,7 +255,6 @@ class Blast(Drawable):
 		self.lifetime += 1
 
 	def is_active(self):
-		print(self.lifetime)
 		return self.lifetime < 20
 		
 

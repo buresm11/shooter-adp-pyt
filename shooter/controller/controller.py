@@ -3,6 +3,8 @@ from pyglet.window import key
 from abc import ABC, abstractmethod
 
 from ..model.data import Vector
+from ..pattern.memento import Memento
+from ..pattern.memento import ModelCareTaker
 
 class Controller():
 
@@ -11,6 +13,7 @@ class Controller():
 		self.model = model
 		self.keys_pressed = {}
 		self.commands = []
+		self.model_care_taker = ModelCareTaker()
 
 		self.keys_pressed['space'] = False
 		self.keys_pressed['up'] = False
@@ -30,26 +33,26 @@ class Controller():
 			self.keys_pressed['space'] = True
 		elif symbol == key.UP:
 			self.keys_pressed['up'] = True
-			self.commands.append(MoveCannonCommand(self.model, Vector(0,5)))
+			self.commands.append(MoveCannonCommand(self.model_care_taker, self.model, Vector(0,5)))
 		elif symbol == key.DOWN:
 			self.keys_pressed['down'] = True
-			self.commands.append(MoveCannonCommand(self.model, Vector(0,-5)))
+			self.commands.append(MoveCannonCommand(self.model_care_taker, self.model, Vector(0,-5)))
 		elif symbol == key.LEFT:
 			self.keys_pressed['left'] = True
-			self.commands.append(RotateCannonCommand(self.model, -0.1))
+			self.commands.append(RotateCannonCommand(self.model_care_taker, self.model, -0.1))
 		elif symbol == key.RIGHT:
 			self.keys_pressed['right'] = True
-			self.commands.append(RotateCannonCommand(self.model, 0.1))
+			self.commands.append(RotateCannonCommand(self.model_care_taker, self.model, 0.1))
 		elif symbol == key.A:
-			self.commands.append(ChangeGravityCommand(self.model,-1))
+			self.commands.append(ChangeGravityCommand(self.model_care_taker, self.model,-1))
 		elif symbol == key.S:
-			self.commands.append(ChangeGravityCommand(self.model,1))
+			self.commands.append(ChangeGravityCommand(self.model_care_taker, self.model,1))
 		elif symbol == key.U:
-			self.commands.append(GoBackCommand(self.model))
+			self.commands.append(GoBackCommand(self.model_care_taker, self.model))
 		elif symbol == key.Q:
-			self.commands.append(SwitchModeCommand(self.model))
+			self.commands.append(SwitchModeCommand(self.model_care_taker, self.model))
 		elif symbol == key.W:
-			self.commands.append(SwitchCannonModeCommand(self.model))
+			self.commands.append(SwitchCannonModeCommand(self.model_care_taker, self.model))
 
 	def key_released(self, symbol, modifiers):
 		if symbol == key.SPACE:
@@ -71,16 +74,16 @@ class Controller():
 	def tick(self, t):
 
 		if self.keys_pressed['up'] == True:
-			self.commands.append(MoveCannonCommand(self.model, Vector(0,5)))
+			self.commands.append(MoveCannonCommand(self.model_care_taker, self.model, Vector(0,5)))
 
 		if self.keys_pressed['down'] == True:
-			self.commands.append(MoveCannonCommand(self.model, Vector(0,-5)))
+			self.commands.append(MoveCannonCommand(self.model_care_taker, self.model, Vector(0,-5)))
 
 		if self.keys_pressed['left'] == True:
-			self.commands.append(RotateCannonCommand(self.model, -0.1))
+			self.commands.append(RotateCannonCommand(self.model_care_taker, self.model, -0.1))
 
 		if self.keys_pressed['right'] == True:
-			self.commands.append(RotateCannonCommand(self.model, 0.1))
+			self.commands.append(RotateCannonCommand(self.model_care_taker, self.model, 0.1))
 
 		for command in self.commands:
 			command.execute()
@@ -113,16 +116,19 @@ class OrderToFireCommand():
 
 class MoveCannonCommand():
 
-	def __init__(self, model, offset):
+	def __init__(self, model_care_taker, model, offset):
+		self.model_care_taker = model_care_taker
 		self.model = model
 		self.offset = offset
 
 	def execute(self):
+		self.model_care_taker.add(self.model.save_to_memento())
 		self.model.move_cannon(self.offset)
 
 class RotateCannonCommand():
 
-	def __init__(self, model, rotation_offset):
+	def __init__(self, model_care_taker, model, rotation_offset):
+		self.model_care_taker = model_care_taker
 		self.model = model;
 		self.rotation_offset = rotation_offset
 
@@ -131,7 +137,8 @@ class RotateCannonCommand():
 
 class ChangeGravityCommand():
 
-	def __init__(self, model, gravity_offset):
+	def __init__(self, model_care_taker, model, gravity_offset):
+		self.model_care_taker = model_care_taker
 		self.model = model;
 		self.gravity_offset = gravity_offset
 
@@ -140,7 +147,8 @@ class ChangeGravityCommand():
 
 class GoBackCommand():
 
-	def __init__(self, model):
+	def __init__(self,model_care_taker, model):
+		self.model_care_taker = model_care_taker
 		self.model = model;
 
 	def execute(self):
@@ -148,7 +156,8 @@ class GoBackCommand():
 
 class SwitchModeCommand():
 
-	def __init__(self, model):
+	def __init__(self, model_care_taker, model):
+		self.model_care_taker = model_care_taker
 		self.model = model;
 
 	def execute(self):
@@ -156,7 +165,8 @@ class SwitchModeCommand():
 
 class SwitchCannonModeCommand():
 
-	def __init__(self, model):
+	def __init__(self, model_care_taker, model):
+		self.model_care_taker = model_care_taker
 		self.model = model;
 
 	def execute(self):

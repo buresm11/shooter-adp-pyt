@@ -1,10 +1,12 @@
 import pyglet
 import os
 from abc import ABC, abstractmethod
+from copy import deepcopy
 
 from ..pattern.observer import Observable
 from ..pattern.factory import SmartFactory
 from ..pattern.factory import SimpleFactory
+from ..pattern.memento import Memento
 from .objects import Cannon
 from .objects import SimpleEnemy
 from .objects import SmartEnemy
@@ -140,6 +142,21 @@ class Model(Observable):
 		hud.append('Score: ' + str(self.score))
 
 		return hud
+
+	def save_to_memento(self):
+
+		return Memento(self.cannon.copy(),self.enemies, self.factory, self.gravity, self.situation)
+
+	def get_from_memento(self, memento):
+		self.cannon = memento.cannon
+		self.enemies = memento.enemies
+		self.factory = memento.factory
+		self.gravity = memento.gravity
+		self.situation = memento.situation
+
+		self.missiles.clear()
+		self.blast.clear()
+		self.notify_observers()
 
 class Images():
 

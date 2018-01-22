@@ -21,11 +21,17 @@ class Vector():
 		self.x = x;
 		self.y = y;
 
+	def copy():
+		return Vector(self.x, self.y)
+
 class Size():
 
 	def __init__(self, x, y):
 		self.x = x;
 		self.y = y;
+
+	def copy():
+		return Size(self.x, self.y)
 
 class Rect():
 
