@@ -1,5 +1,6 @@
 
 class Memento:
+	""" stores state of model for going back functionality  """
 
 	def __init__(self, cannon, enemies, factory, gravity, situation, score):
 		self.cannon = cannon
@@ -10,6 +11,7 @@ class Memento:
 		self.score = score
 
 class ModelCareTaker:
+	""" stores all mementos """
 
 	def __init__(self):
 		self.mementos = []
@@ -18,6 +20,7 @@ class ModelCareTaker:
 		self.mementos.append(Memento)
 
 	def get_last(self):
+
 		if len(self.mementos) > 0:
 			return self.mementos.pop()
 		else:

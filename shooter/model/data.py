@@ -1,6 +1,5 @@
 from enum import Enum
 
-
 class Situation(Enum):
 	SIMPLE = 1
 	SMART = 2
@@ -14,6 +13,14 @@ class Direction(Enum):
 	WEST = 2
 	NORTH = 3
 	SOUTH = 4
+
+class MoveDirection(Enum):
+	UP = 1
+	DOWN = 2
+
+class RotateDirection(Enum):
+	LEFT = 1
+	RIGHT = 2
 
 class Vector():
 

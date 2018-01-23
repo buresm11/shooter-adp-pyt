@@ -1,25 +1,21 @@
 import math
 
-from abc import ABC, abstractmethod
+DEFAULT_TIME_INCREMENT = 0.2
 
-class Strategy(ABC):
-
-	@abstractmethod
-	def move(missile):
-		pass
-
-class SimpleStrategy(Strategy):
+class SimpleStrategy():
+	""" moves fired missile without taking gravity into account """
 
 	def move(self, missile):
-		missile.time += 0.2
+		missile.time += DEFAULT_TIME_INCREMENT
 
 		missile.x += (missile.fire_power) * math.cos(missile.angle)
 		missile.y -= (missile.fire_power) * math.sin(missile.angle)
 
-class SmartStrategy(Strategy):
+class SmartStrategy():
+	""" moves fired missile with taking gravity into account """
 
 	def move(self, missile):
-		missile.time += 0.2
+		missile.time += DEFAULT_TIME_INCREMENT
 		gra = -9.8
 
 		missile.lastx = missile.x

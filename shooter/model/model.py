@@ -5,22 +5,21 @@ from copy import deepcopy
 import pickle
 
 from ..pattern.observer import Observable
-from ..pattern.factory import SmartFactory
-from ..pattern.factory import SimpleFactory
+from ..pattern.factory import SmartFactory, SimpleFactory
 from ..pattern.memento import Memento
-from .objects import Cannon
-from .objects import SimpleEnemy
-from .objects import SmartEnemy
-from .data import Situation
-from .data import CannonSituation
-from .data import Vector
-from .data import Rect
+from .objects import Cannon, SimpleEnemy, SmartEnemy
+from .data import Situation, CannonSituation, Vector, Rect, MoveDirection, RotateDirection
 
 DEFAULT_SITUATION = Situation.SIMPLE
 DEFAULT_CANONN_SITUATION = CannonSituation.TWO_MISSILE
 DEFAULT_GRAVITY = 10
+DEFAULT_CANNON_MOVE = 5
+DEFAULT_CANNON_ROTATE = 0.1
+DEFAULT_GRAVITY_OFFSET = 1
+MAX_GRAVITY = 20
 
 class Model(Observable):
+	""" main class representing the game """
 
 	def __init__(self, size):
 		super().__init__()
@@ -78,11 +77,19 @@ class Model(Observable):
 	def fire(self):
 		self.missiles.extend(self.cannon.fire())
 
-	def move_cannon(self, offset):
-		self.cannon.move(offset)
+	def move_cannon(self, move_direction):
+		if move_direction == MoveDirection.UP:
+			self.cannon.move(Vector(0,DEFAULT_CANNON_MOVE))
+		elif move_direction == MoveDirection.DOWN:
+			self.cannon.move(Vector(0,-DEFAULT_CANNON_MOVE))
 
-	def rotate_cannon(self, rotation_offset):
-		self.cannon.rotate_cannon(rotation_offset)
+	def rotate_cannon(self, rotate_direction):
+		if rotate_direction == RotateDirection.LEFT:
+			self.cannon.rotate_cannon(-DEFAULT_CANNON_ROTATE)
+			print("left")
+		elif rotate_direction == RotateDirection.RIGHT:
+			self.cannon.rotate_cannon(DEFAULT_CANNON_ROTATE)
+			print("right")
 
 	def make_enemies(self):
 		for i in range(15):
@@ -97,8 +104,13 @@ class Model(Observable):
 	def remove_non_active_blasts(self):
 		self.blasts = [b for b in self.blasts if b.is_active()]
 		
-	def change_gravity(self, gravity_offset):
-		if self.gravity + gravity_offset > 0 and self.gravity + gravity_offset < 20:
+	def change_gravity(self, gravity_direction):
+		if gravity_direction == MoveDirection.LEFT:
+			gravity_offset = DEFAULT_GRAVITY_OFFSET
+		elif gravity_direction == MoveDirection.RIGHT:
+			gravity_offset = -DEFAULT_GRAVITY_OFFSET
+
+		if self.gravity + gravity_offset > 0 and self.gravity + gravity_offset < MAX_GRAVITY:
 			self.gravity += gravity_offset
 			self.cannon.gravity = self.gravity
 
@@ -172,7 +184,6 @@ class Model(Observable):
 		self.notify_observers()
 
 	def load_from_file(self):
-		print("load")
 		data = self.get_data_from_file()
 
 		self.blasts.clear()
@@ -203,8 +214,6 @@ class Model(Observable):
 		with open(path, 'rb') as f:
 			return pickle.load(f)
 
-		print("loaded")
-
 	def accept(self, visitor):
 		visitor.visit_model(self)
 
@@ -215,7 +224,7 @@ class Images():
 		return cannon
 
 	def enemy_image(self):
-		enemy = pyglet.image.load(os.path.dirname(__file__) + '/../res/enemy1.png')
+		enemy = pyglet.image.load(os.path.dirname(__file__) + '/../res/enemy.png')
 		return enemy
 
 	def missile_image(self):

@@ -3,16 +3,11 @@ import os
 import math
 import random
 
-from .data import CannonSituation
-from .data import Direction
-from .data import Vector
-from .data import Rect
-
-from ..pattern.state import OneMissileCannonState
-from ..pattern.state import TwoMissileCannonState
-
+from .data import CannonSituation, Direction, Vector, Rect
+from ..pattern.state import OneMissileCannonState, TwoMissileCannonState
 
 class Drawable(pyglet.sprite.Sprite):
+	""" game object that can be drawn on window """
 
 	def __init__(self, image, playground_size):
 		super().__init__(image)
@@ -58,6 +53,7 @@ DEFAULT_MAX_FIRE_POWER = 100
 DEFAULT_MIN_FIRE_POWER = 20
 
 class Cannon(Drawable):
+	""" game object cannon that shoot missiles  """
 	
 	def __init__(self, image, missile_image, playground_size, default_situation, factory, gravity):
 		super().__init__(image, playground_size)
@@ -65,7 +61,7 @@ class Cannon(Drawable):
 		self.angle = 0
 		self.fire_power = DEFAULT_MIN_FIRE_POWER
 		self.ignition_phase = False
-		self.x = self.width / 2
+		self.x = self.width // 2
 		self.y = self.playground_size.y // 2
 		self.factory = factory
 		self.missile_image = missile_image
@@ -121,13 +117,14 @@ class Cannon(Drawable):
 		copy.fire_power = self.fire_power
 		copy.x = self.x
 		copy.y = self.y
-		
+
 		return copy
 
 	def accept(self, visitor):
 		visitor.visit_cannon(self)
 
 class Enemy(Drawable):
+	""" game object enemy that randomly computes its position """
 
 	def __init__(self, image, playground_size):
 		super().__init__(image, playground_size)
@@ -142,6 +139,7 @@ class Enemy(Drawable):
 		self.y = random.randint(lowy, highy)
 
 class SimpleEnemy(Enemy):
+	""" game object simple enemy that never moves """
 
 	def __init__(self, image, playground_size):
 		super().__init__(image, playground_size)
@@ -160,6 +158,7 @@ class SimpleEnemy(Enemy):
 		visitor.visit_simple_enemy(self.copy())
 
 class SmartEnemy(Enemy):
+	""" game object smart enemy that moves randomly """
 
 	def __init__(self, image, playground_size):
 		super().__init__(image, playground_size)
@@ -212,6 +211,7 @@ class SmartEnemy(Enemy):
 
 
 class Missile(Drawable):
+	""" game object for shooting enemies """
 
 	def __init__(self, image, playground_size, location, angle, strategy):
 		super().__init__(image, playground_size)
@@ -256,6 +256,7 @@ class Missile(Drawable):
 		visitor.visit_missile(self)
 
 class Blast(Drawable):
+	""" game object that appears after enemy has been shot """
 
 	def __init__(self, image, playground_size, location):
 		super().__init__(image, playground_size)

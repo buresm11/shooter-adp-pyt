@@ -2,6 +2,7 @@ from .model import Model
 from ..pattern.observer import Observable
 
 class ModelProxy(Observable):
+	""" proxy pattern for model """
 
 	def __init__(self, size):
 		super().__init__()
@@ -26,11 +27,11 @@ class ModelProxy(Observable):
 	def fire(self):
 		self.model.fire()
 
-	def move_cannon(self, offset):
-		self.model.move_cannon(offset)
+	def move_cannon(self, move_direction):
+		self.model.move_cannon(move_direction)
 
-	def rotate_cannon(self, rotation_offset):
-		self.model.rotate_cannon(rotation_offset)
+	def rotate_cannon(self, rotate_direction):
+		self.model.rotate_cannon(rotate_direction)
 
 	def make_enemies(self):
 		self.model.make_enemies()
@@ -44,8 +45,8 @@ class ModelProxy(Observable):
 	def remove_non_active_blasts(self):
 		self.model.remove_non_active_blasts()
 		
-	def change_gravity(self, gravity_offset):
-		self.model.change_gravity(gravity_offset)
+	def change_gravity(self, gravity_direction):
+		self.model.change_gravity(gravity_direction)
 
 	def switch_mode(self):
 		self.model.switch_mode()

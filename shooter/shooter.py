@@ -17,3 +17,8 @@ def main():
 
 	controller = Controller(view, model)
 	controller.run()
+
+
+# check if file exists
+# react to gravity
+#check for that ints

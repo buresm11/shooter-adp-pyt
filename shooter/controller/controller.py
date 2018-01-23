@@ -1,15 +1,14 @@
-import pyglet
-from pyglet.window import key
-from abc import ABC, abstractmethod
-import contextlib
 import os
+import pyglet
+import contextlib
+from pyglet.window import key
 
-from ..model.data import Vector
-from ..pattern.memento import Memento
-from ..pattern.memento import ModelCareTaker
+from ..model.data import Vector, MoveDirection, RotateDirection
+from ..pattern.memento import Memento, ModelCareTaker
 from ..pattern.visitor import Visitor
 
 class Controller():
+	""" Handles all user input """
 
 	def __init__(self, view, model):
 		self.view = view
@@ -36,20 +35,20 @@ class Controller():
 			self.keys_pressed['space'] = True
 		elif symbol == key.UP:
 			self.keys_pressed['up'] = True
-			self.commands.append(MoveCannonCommand(self.model_care_taker, self.model, Vector(0,5)))
+			self.commands.append(MoveCannonCommand(self.model_care_taker, self.model, MoveDirection.UP))
 		elif symbol == key.DOWN:
 			self.keys_pressed['down'] = True
-			self.commands.append(MoveCannonCommand(self.model_care_taker, self.model, Vector(0,-5)))
+			self.commands.append(MoveCannonCommand(self.model_care_taker, self.model, MoveDirection.DOWN))
 		elif symbol == key.LEFT:
 			self.keys_pressed['left'] = True
-			self.commands.append(RotateCannonCommand(self.model_care_taker, self.model, -0.1))
+			self.commands.append(RotateCannonCommand(self.model_care_taker, self.model, RotateDirection.LEFT))
 		elif symbol == key.RIGHT:
 			self.keys_pressed['right'] = True
-			self.commands.append(RotateCannonCommand(self.model_care_taker, self.model, 0.1))
+			self.commands.append(RotateCannonCommand(self.model_care_taker, self.model, RotateDirection.RIGHT))
 		elif symbol == key.A:
-			self.commands.append(ChangeGravityCommand(self.model_care_taker, self.model,-1))
+			self.commands.append(ChangeGravityCommand(self.model_care_taker, self.model, MoveDirection.DOWN))
 		elif symbol == key.S:
-			self.commands.append(ChangeGravityCommand(self.model_care_taker, self.model,1))
+			self.commands.append(ChangeGravityCommand(self.model_care_taker, self.model, MoveDirection.UP))
 		elif symbol == key.U:
 			self.commands.append(GoBackCommand(self.model_care_taker, self.model))
 		elif symbol == key.Q:
@@ -83,16 +82,16 @@ class Controller():
 	def tick(self, t):
 
 		if self.keys_pressed['up'] == True:
-			self.commands.append(MoveCannonCommand(self.model_care_taker, self.model, Vector(0,5)))
+			self.commands.append(MoveCannonCommand(self.model_care_taker, self.model, MoveDirection.UP))
 
 		if self.keys_pressed['down'] == True:
-			self.commands.append(MoveCannonCommand(self.model_care_taker, self.model, Vector(0,-5)))
+			self.commands.append(MoveCannonCommand(self.model_care_taker, self.model, MoveDirection.DOWN))
 
 		if self.keys_pressed['left'] == True:
-			self.commands.append(RotateCannonCommand(self.model_care_taker, self.model, -0.1))
+			self.commands.append(RotateCannonCommand(self.model_care_taker, self.model, RotateDirection.LEFT))
 
 		if self.keys_pressed['right'] == True:
-			self.commands.append(RotateCannonCommand(self.model_care_taker, self.model, 0.1))
+			self.commands.append(RotateCannonCommand(self.model_care_taker, self.model, RotateDirection.RIGHT))
 
 		for command in self.commands:
 			command.execute()
@@ -100,14 +99,8 @@ class Controller():
 		self.commands.clear()
 		self.model.tick()
 
-
-class Command(ABC):
-
-	@abstractmethod
-	def execute():
-		pass
-
 class FireCommand():
+	""" command pattern, executes command that fires missile """
 
 	def __init__(self, model):
 		self.model = model
@@ -116,6 +109,7 @@ class FireCommand():
 		self.model.fire()
 
 class OrderToFireCommand():
+	""" command pattern, executes command that orders cannon to fire """
 
 	def __init__(self, model):
 		self.model = model
@@ -124,39 +118,43 @@ class OrderToFireCommand():
 		self.model.order_to_fire()
 
 class MoveCannonCommand():
+	""" command pattern, executes command that moves cannon """
 
-	def __init__(self, model_care_taker, model, offset):
+	def __init__(self, model_care_taker, model, move_direction):
 		self.model_care_taker = model_care_taker
 		self.model = model
-		self.offset = offset
+		self.move_direction = move_direction
 
 	def execute(self):
 		self.model_care_taker.add(self.model.save_to_memento())
-		self.model.move_cannon(self.offset)
+		self.model.move_cannon(self.move_direction)
 
 class RotateCannonCommand():
+	""" command pattern, executes command that rotates cannon """
 
-	def __init__(self, model_care_taker, model, rotation_offset):
+	def __init__(self, model_care_taker, model, rotate_direction):
 		self.model_care_taker = model_care_taker
 		self.model = model;
-		self.rotation_offset = rotation_offset
+		self.rotate_direction = rotate_direction
 
 	def execute(self):
 		self.model_care_taker.add(self.model.save_to_memento())
-		self.model.rotate_cannon(self.rotation_offset)
+		self.model.rotate_cannon(self.rotate_direction)
 
 class ChangeGravityCommand():
+	""" command pattern, executes command that changes gravity """
 
-	def __init__(self, model_care_taker, model, gravity_offset):
+	def __init__(self, model_care_taker, model, gravity_direction):
 		self.model_care_taker = model_care_taker
 		self.model = model;
-		self.gravity_offset = gravity_offset
+		self.gravity_direction = gravity_direction
 
 	def execute(self):
 		self.model_care_taker.add(self.model.save_to_memento())
-		self.model.change_gravity(self.gravity_offset)
+		self.model.change_gravity(self.gravity_direction)
 
 class GoBackCommand():
+	""" command pattern, executes command that goes back one step using memento pattern """
 
 	def __init__(self,model_care_taker, model):
 		self.model_care_taker = model_care_taker
@@ -168,6 +166,7 @@ class GoBackCommand():
 			self.model.get_from_memento(memento);
 
 class SwitchModeCommand():
+	""" command pattern, executes command that switches between simple and smart environment """
 
 	def __init__(self, model_care_taker, model):
 		self.model_care_taker = model_care_taker
@@ -178,6 +177,7 @@ class SwitchModeCommand():
 		self.model.switch_mode()
 
 class SwitchCannonModeCommand():
+	""" command pattern, executes command that switches whether cannon uses one or two missile """
 
 	def __init__(self, model_care_taker, model):
 		self.model_care_taker = model_care_taker
@@ -188,6 +188,7 @@ class SwitchCannonModeCommand():
 		self.model.switch_cannon_mode()
 
 class LoadCommand():
+	""" command pattern, executes command that loads game from file"""
 
 	def __init__(self, model):
 		self.model = model
@@ -196,14 +197,13 @@ class LoadCommand():
 		self.model.load_from_file()
 
 class SaveCommand():
+	""" command pattern, executes command that save game to file """
 
 	def __init__(self, model):
 		self.model = model
 		
 	def execute(self):
-
 		visitor = Visitor()
-
 		drawables = self.model.get_drawables()
 
 		for d in drawables:
@@ -213,6 +213,7 @@ class SaveCommand():
 		visitor.save()
 
 class ResetCommand():
+	""" command pattern, executes command that removes save file """
 
 	def execute(self):
 		path = os.path.dirname(__file__) + '/../res/save'

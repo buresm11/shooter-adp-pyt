@@ -1,24 +1,8 @@
-from abc import ABC, abstractmethod
+from ..model.objects import SimpleEnemy, SmartEnemy, Missile
+from ..pattern.strategy import SimpleStrategy, SmartStrategy
 
-from ..model.objects import SimpleEnemy
-from ..model.objects import SmartEnemy
-from ..model.objects import Missile
-
-from ..pattern.strategy import SimpleStrategy
-from ..pattern.strategy import SmartStrategy
-
-
-class Factory(ABC):
-
-	@abstractmethod
-	def create_enemy(self, image, playground_size):
-		pass
-
-	@abstractmethod
-	def create_missile(self, image, playground_size, location, rotation):
-		pass
-
-class SimpleFactory(Factory):
+class SimpleFactory():
+	""" creates simple objects such as simple enemies that do not move and simple missiles that do not use gravity """
 
 	def create_enemy(self, image, playground_size):
 		return SimpleEnemy(image, playground_size)
@@ -26,7 +10,8 @@ class SimpleFactory(Factory):
 	def create_missile(self, image, playground_size, location, rotation):
 		return Missile(image, playground_size, location, rotation, SimpleStrategy())
 
-class SmartFactory(Factory):
+class SmartFactory():
+	""" creates simple objects such as smart enemies that move and smart missiles which use gravity """
 
 	def create_enemy(self, image, playground_size):
 		return SmartEnemy(image, playground_size)

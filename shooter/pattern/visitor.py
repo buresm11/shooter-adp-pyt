@@ -2,11 +2,11 @@ import os
 import pickle
 
 class Visitor():
+	""" Visitor pattern class for saving game to a file """
 
 	def __init__(self):
 		self.data = {}
 		self.path = os.path.dirname(__file__) + '/../res/save'
-
 		self.enemies = []
 
 	def visit_simple_enemy(self, simple_enemy):
@@ -36,6 +36,4 @@ class Visitor():
 		self.data['enemies'] = self.enemies
 		with open(self.path, 'wb') as f:
 			pickle.dump(self.data, f, pickle.HIGHEST_PROTOCOL)
-
-		print("saved")
     	
