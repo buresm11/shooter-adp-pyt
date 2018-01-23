@@ -12,7 +12,7 @@ class Memento:
 
 class ModelCareTaker:
 	""" stores all mementos """
-
+	
 	def __init__(self):
 		self.mementos = []
 

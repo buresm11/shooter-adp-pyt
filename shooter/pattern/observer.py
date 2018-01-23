@@ -24,5 +24,6 @@ class Observable(ABC):
 
 class Observer():
 	""" observer pattern """
+	
 	def update():
 		pass

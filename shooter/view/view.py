@@ -43,7 +43,7 @@ class View(pyglet.window.Window, Observer):
 		credit = pyglet.text.Label('Images created by Ibrandify - Freepik.com',
 						font_name='Times New Roman',
 						font_size=10,
-						x=560, y=20,
+						x=570, y=20,
 						color=(0,0,0,255),
 						anchor_x='left', anchor_y='top')
 		credit.draw()

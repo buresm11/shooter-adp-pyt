@@ -3,6 +3,7 @@ import os
 from abc import ABC, abstractmethod
 from copy import deepcopy
 import pickle
+import math
 
 from ..pattern.observer import Observable
 from ..pattern.factory import SmartFactory, SimpleFactory
@@ -86,10 +87,8 @@ class Model(Observable):
 	def rotate_cannon(self, rotate_direction):
 		if rotate_direction == RotateDirection.LEFT:
 			self.cannon.rotate_cannon(-DEFAULT_CANNON_ROTATE)
-			print("left")
 		elif rotate_direction == RotateDirection.RIGHT:
 			self.cannon.rotate_cannon(DEFAULT_CANNON_ROTATE)
-			print("right")
 
 	def make_enemies(self):
 		for i in range(15):
@@ -105,9 +104,9 @@ class Model(Observable):
 		self.blasts = [b for b in self.blasts if b.is_active()]
 		
 	def change_gravity(self, gravity_direction):
-		if gravity_direction == MoveDirection.LEFT:
+		if gravity_direction == MoveDirection.UP:
 			gravity_offset = DEFAULT_GRAVITY_OFFSET
-		elif gravity_direction == MoveDirection.RIGHT:
+		elif gravity_direction == MoveDirection.DOWN:
 			gravity_offset = -DEFAULT_GRAVITY_OFFSET
 
 		if self.gravity + gravity_offset > 0 and self.gravity + gravity_offset < MAX_GRAVITY:
@@ -186,6 +185,9 @@ class Model(Observable):
 	def load_from_file(self):
 		data = self.get_data_from_file()
 
+		if data is None:
+			return
+
 		self.blasts.clear()
 		self.missiles.clear()
 
@@ -196,6 +198,10 @@ class Model(Observable):
 
 		cannon_situation = data['cannon_situation']
 		self.cannon = Cannon(self.images.cannon_image(), self.images.missile_image(), self.size, cannon_situation, self.factory, self.gravity)
+		self.cannon.x = data['cannon_x']
+		self.cannon.y = data['cannon_y']
+		self.cannon.angle = data['cannon_angle']
+		self.cannon.rotation = math.degrees(self.cannon.angle)
 
 		enemies = data['enemies']
 		self.enemies.clear()
@@ -211,8 +217,11 @@ class Model(Observable):
 	def get_data_from_file(self):
 
 		path = os.path.dirname(__file__) + '/../res/save'
-		with open(path, 'rb') as f:
-			return pickle.load(f)
+		try:
+			with open(path, 'rb') as f:
+				return pickle.load(f)
+		except:
+			return None
 
 	def accept(self, visitor):
 		visitor.visit_model(self)

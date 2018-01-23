@@ -12,8 +12,8 @@ class Drawable(pyglet.sprite.Sprite):
 	def __init__(self, image, playground_size):
 		super().__init__(image)
 
-		self.image.anchor_x = self.width / 2
-		self.image.anchor_y = self.height / 2
+		self.image.anchor_x = self.width // 2
+		self.image.anchor_y = self.height // 2
 
 		self.playground_size = playground_size
 
@@ -29,28 +29,28 @@ class Drawable(pyglet.sprite.Sprite):
 
 		accident = False
 
-		if self.x + offset.x - self.width / 2  < 0:
-			self.x = self.width / 2
+		if self.x + offset.x - self.width // 2  < 0:
+			self.x = self.width // 2
 			accident = True
-		elif self.x + offset.x + self.width / 2 > self.playground_size.x:
-			self.x = self.playground_size.x - self.width / 2
+		elif self.x + offset.x + self.width // 2 > self.playground_size.x:
+			self.x = self.playground_size.x - self.width // 2
 			accident = True
 		else:
 			self.x += offset.x
 
-		if self.y + offset.y - self.height / 2 < 0:
-			self.y = self.height / 2
+		if self.y + offset.y - self.height // 2 < 0:
+			self.y = self.height // 2
 			accident = True
-		elif self.y + offset.y + self.height / 2 > self.playground_size.y:
-			self.y = self.playground_size.y - self.height / 2
+		elif self.y + offset.y + self.height // 2 > self.playground_size.y:
+			self.y = self.playground_size.y - self.height // 2
 			accident = True
 		else:
 			self.y += offset.y
 
 		return accident
 
-DEFAULT_MAX_FIRE_POWER = 100
-DEFAULT_MIN_FIRE_POWER = 20
+DEFAULT_MAX_FIRE_POWER = 25
+DEFAULT_MIN_FIRE_POWER = 10
 
 class Cannon(Drawable):
 	""" game object cannon that shoot missiles  """
@@ -102,6 +102,7 @@ class Cannon(Drawable):
 			self.fire_power += 1
 
 	def switch_mode(self):
+		self.prepared_missiles.clear()
 
 		if self.situation == CannonSituation.ONE_MISSILE:
 			self.state = TwoMissileCannonState()
@@ -114,6 +115,7 @@ class Cannon(Drawable):
 		copy = Cannon(self.image, self.missile_image, self.playground_size, self.situation, self.factory, self.gravity)
 		copy.ignition_phase = False
 		copy.angle = self.angle
+		copy.rotation = math.degrees(copy.angle)
 		copy.fire_power = self.fire_power
 		copy.x = self.x
 		copy.y = self.y
@@ -129,11 +131,11 @@ class Enemy(Drawable):
 	def __init__(self, image, playground_size):
 		super().__init__(image, playground_size)
 
-		lowx = int(self.width / 2)
-		lowy = int(self.height / 2)
+		lowx = self.width // 2
+		lowy = self.height // 2
 
-		highx = int(self.playground_size.x - self.width / 2)
-		highy = int(self.playground_size.y - self.height / 2)
+		highx = self.playground_size.x - self.width // 2
+		highy = self.playground_size.y - self.height // 2
 
 		self.x = random.randint(lowx, highx)
 		self.y = random.randint(lowy, highy)
