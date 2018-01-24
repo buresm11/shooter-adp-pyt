@@ -34,33 +34,43 @@ Hra bude obsahovat následující prvky:
 Documentation
 ===============
 
+Installation
+------------
+
+``python setup.py install``
+
+Usage
+-----
+
+``python -m shooter``
+
 Keys
 ------------------
 
-* **Space** - f
-* **Left** - rotates the cannon to the left
-* **Right** - 
-* **Up** -
-* **Down*** -
-* **Q** -
-* **W** -
-* **A** -
-* **S** -
-* **E** - 
-* **R** -
-* **T** -
+* **Space** - shoots missiles, holding space will increase missile power
+* **Left** - rotates cannon counterclockwise
+* **Right** - rotates cannon clockwise
+* **Up** - moves cannon up
+* **Down*** - moves cannon down
+* **Q** - switches between simple (static enemies, missiles) and smart (enemy moves, missiles drop to ground)
+* **W** - switches between one missile/two missile mode
+* **A** - decreases gravity
+* **S** - increases gravity
+* **E** - loads game from file
+* **R** - reset save file
+* **T** - saves game to file
+* **U** - step back
 
 
 Usage of patterns
 ------------------
 
-* MVC:
-* Strategy
-* Proxy
-* State
-* Visitor
-* Observer
-* Command
-* Memento
-* Abstract Factory
+* Strategy - 
+* Proxy - 
+* State - 
+* Visitor - 
+* Observer - 
+* Command - 
+* Memento -
+* Abstract Factory -
 

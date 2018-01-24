@@ -17,5 +17,3 @@ def main():
 
 	controller = Controller(view, model)
 	controller.run()
-
-# react to gravity
