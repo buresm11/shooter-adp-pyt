@@ -5,9 +5,8 @@ Shooter je semestrální práce z předmětu MI-ADP, která se zaměřuje na
 návrhové vzory. Jedná se o jednoduchou střílečku, jejímž úkolem je pomocí
 kanónu sestřelovat nepřátelské jednotky.
 
-Zadání
-=======
-   
+Task
+===============
 Hra bude obsahovat následující prvky:    
 
 * Bude implementována pomocí **pyglet**
@@ -31,3 +30,37 @@ Hra bude obsahovat následující prvky:
   * Command
   * Memento
   * Abstract Factory
+
+Documentation
+===============
+
+Keys
+------------------
+
+* **Space** - f
+* **Left** - rotates the cannon to the left
+* **Right** - 
+* **Up** -
+* **Down*** -
+* **Q** -
+* **W** -
+* **A** -
+* **S** -
+* **E** - 
+* **R** -
+* **T** -
+
+
+Usage of patterns
+------------------
+
+* MVC:
+* Strategy
+* Proxy
+* State
+* Visitor
+* Observer
+* Command
+* Memento
+* Abstract Factory
+

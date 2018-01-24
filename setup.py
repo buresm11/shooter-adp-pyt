@@ -14,5 +14,7 @@ setup(
     	'License :: Public Domain',
     	'Programming Language :: Python'],
     install_requires=['pyglet'],
-    zip_safe=False
+    zip_safe=False,
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest', 'pytest-cov']
 )
