@@ -68,10 +68,10 @@ Usage of patterns
 
 * **Strategy** pattern is used for moving missile. Misssile that uses SimpleStrategy does not use gravity. Misssile that uses SmartStrategy uses gravity and acts like a ballistic missile.
 * **Proxy** pattern is used for accesing model.
-* **State** patter is used to decide whether cannon fires one or two missiles. If cannon uses OneMissileCannonState then it fires one missile. If cannon uses TwoMissileCannonState then it fires two missiles.
+* **State** patter is used to decide whether cannon fires one or two missiles. If cannon uses OneMissileCannonState it fires one missile. If cannon uses TwoMissileCannonState it fires two missiles.
 * **Visitor** pattern is used for saving state of model to a file.
 * **Observer** is used for informing view that model has changed. Model registers view as observer and then notify it when needed.  
 * **Memento** patter is used by model for undo. Model can save its state to memento and then go back to its previous state.
 * **Command** pattern handle user input. Whenever user press key a command is created. Command also creates new memento for saving state.
-* **Abstract Factory** pattern creates new missiles and enemies. SimpleFactory creates enemies that do not move and missiles that use SimpleStrategy. SmartFactory creates enemies that move and missiles that use SmartStrategy
+* **Abstract Factory** pattern creates new missiles and enemies. SimpleFactory creates enemies that do not move and missiles that use SimpleStrategy. SmartFactory creates enemies that move and missiles that use SmartStrategy.
 
