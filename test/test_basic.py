@@ -65,24 +65,24 @@ def test_model_change_mode(model):
 	model.switch_mode()
 	assert(isinstance(model.factory, SimpleFactory))
 
-def model_changes_gravity(mode):
+def test_model_changes_gravity(model):
 
 	assert(model.gravity == 10)
 	
-	change_gravity(self, MoveDirection.UP)
+	model.change_gravity(MoveDirection.UP)
 	assert(model.gravity == 11)
 
-	change_gravity(self, MoveDirection.DOWN)
-	change_gravity(self, MoveDirection.UP)
-	assert(model.gravity == 9)
+	model.change_gravity(MoveDirection.DOWN)
+	model.change_gravity(MoveDirection.UP)
+	assert(model.gravity == 11)
 
 	for i in range(30):
-		change_gravity(self, MoveDirection.DOWN)
-	assert(model.gravity == 0)
+		model.change_gravity(MoveDirection.DOWN)
+	assert(model.gravity == 1)
 
 	for i in range(30):
-		change_gravity(self, MoveDirection.DOWN)
-	assert(model.gravity == 20)
+		model.change_gravity(MoveDirection.UP)
+	assert(model.gravity == 19)
 
 def test_model_is_able_to_save_and_reload_its_state_memento(model):
 	
